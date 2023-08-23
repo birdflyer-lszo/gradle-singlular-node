@@ -121,7 +121,7 @@ task someYarnTask(tpe: YarnTask) {
 	])
 }
 
-task someYarnTask(tpe: PnpmTask) {
+task someNpmTask(tpe: PnpmTask) {
 	args.set(['run', 'my-script'])
 	environment.set([
 		SOME_VAR: 'some-value'
