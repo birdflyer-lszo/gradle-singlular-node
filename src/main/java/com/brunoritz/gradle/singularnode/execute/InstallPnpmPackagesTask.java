@@ -33,12 +33,17 @@ public abstract class InstallPnpmPackagesTask
 {
 	private final ExecOperations processes;
 	private final File executionMarker;
+	private final File packageFile;
+	private final File lockFile;
 
 	@Inject
 	public InstallPnpmPackagesTask(ExecOperations processes, Project project)
 	{
 		this.processes = processes;
+
 		executionMarker = new File(project.file("node_modules"), ".install.executed");
+		packageFile = project.file("package.json");
+		lockFile = project.file("pnpm-lock.yaml");
 	}
 
 	/**
@@ -60,8 +65,6 @@ public abstract class InstallPnpmPackagesTask
 	@Nullable
 	public File getPackageFile()
 	{
-		File packageFile = getProject().file("package.json");
-
 		return packageFile.exists() ? packageFile : null;
 	}
 
@@ -71,8 +74,6 @@ public abstract class InstallPnpmPackagesTask
 	@Nullable
 	public File getPackageLockFile()
 	{
-		File lockFile = getProject().file("pnpm-lock.yaml");
-
 		return lockFile.exists() ? lockFile : null;
 	}
 

@@ -45,7 +45,7 @@ testing {
 			useSpock()
 
 			dependencies {
-				implementation project
+				implementation project()
 			}
 		}
 
@@ -56,6 +56,9 @@ testing {
 }
 
 gradlePlugin {
+	website.set('https://github.com/birdflyer-lszo/gradle-singlular-node')
+	vcsUrl.set('https://github.com/birdflyer-lszo/gradle-singlular-node')
+
 	plugins {
 		singularNode {
 			id = 'com.brunoritz.gradle.singular-node'
@@ -69,10 +72,6 @@ gradlePlugin {
 
 configurations {
 	integrationTestImplementation.extendsFrom testImplementation
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = 'UTF-8'
 }
 
 dependencies {
@@ -137,10 +136,14 @@ publishing {
 
 idea {
 	module {
-		testSourceDirs += file('src/functionalTest/groovy')
-		testResourceDirs += file('src/functionalTest/resources')
+		testSources.from(
+			sourceSets.integrationTest.java.srcDirs,
+			sourceSets.functionalTest.java.srcDirs
+		)
 
-		testSourceDirs += file('src/integrationTest/java')
-		testResourceDirs += file('src/integrationTest/resources')
+		testResources.from(
+			sourceSets.integrationTest.resources.srcDirs,
+			sourceSets.functionalTest.resources.srcDirs
+		)
 	}
 }

@@ -33,12 +33,17 @@ public abstract class InstallYarnPackagesTask
 {
 	private final ExecOperations processes;
 	private final File executionMarker;
+	private final File packageFile;
+	private final File lockFile;
 
 	@Inject
 	public InstallYarnPackagesTask(ExecOperations processes, Project project)
 	{
 		this.processes = processes;
+
 		executionMarker = new File(project.file("node_modules"), ".install.executed");
+		packageFile = project.file("package.json");
+		lockFile = project.file("yarn.lock");
 	}
 
 	/**
@@ -60,9 +65,16 @@ public abstract class InstallYarnPackagesTask
 	@Nullable
 	public File getPackageFile()
 	{
-		File packageFile = getProject().file("package.json");
-
 		return packageFile.exists() ? packageFile : null;
+	}
+
+	@InputFile
+	@PathSensitive(RELATIVE)
+	@Optional
+	@Nullable
+	public File getPackageLockFile()
+	{
+		return lockFile.exists() ? lockFile : null;
 	}
 
 	/**

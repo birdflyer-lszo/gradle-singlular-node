@@ -6,6 +6,7 @@ import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.Project;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
@@ -48,11 +49,16 @@ public abstract class YarnTask
 	extends DefaultTask
 {
 	private final ExecOperations processes;
+	private final File packageFile;
+	private final File lockFile;
 
 	@Inject
-	public YarnTask(ExecOperations processes)
+	public YarnTask(ExecOperations processes, Project project)
 	{
 		this.processes = processes;
+
+		packageFile = project.file("package.json");
+		lockFile = project.file("yarn.lock");
 	}
 
 	@Input
@@ -78,8 +84,6 @@ public abstract class YarnTask
 	@Nullable
 	public File getPackageFile()
 	{
-		File packageFile = getProject().file("package.json");
-
 		return packageFile.exists() ? packageFile : null;
 	}
 
@@ -89,8 +93,6 @@ public abstract class YarnTask
 	@Nullable
 	public File getPackageLockFile()
 	{
-		File lockFile = getProject().file("yarn.lock");
-
 		return lockFile.exists() ? lockFile : null;
 	}
 
