@@ -1,0 +1,93 @@
+import java.util.regex.Pattern
+
+gitVersion {
+	rules {
+		Pattern releaseVersionTag = ~/v(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)/
+
+		before {
+			def releaseVersion = findLatestTag(releaseVersionTag)
+
+			version.major = releaseVersion ? releaseVersion.matches['major'].toInteger() : 0
+			version.minor = releaseVersion ? releaseVersion.matches['minor'].toInteger() : 0
+			version.patch = releaseVersion ? releaseVersion.matches['patch'].toInteger() : 0
+		}
+
+		/*
+		 * On a feature branch the build version is either
+		 * - The last release version with its minor version incremented by one and patch level zero
+		 * - The version set in the latest "start of development" tag and patch level zero
+		 *
+		 * The tag representing the higher version number is used.
+		 */
+		onBranch(~/^(?!master|release\/|hotfix\/).*$/) {
+			def latestDevStart = findLatestTag(~/startdev-v(?<major>\d+)\.(?<minor>\d+)/)
+			int startMajorVersion = latestDevStart ? latestDevStart.matches['major'].toInteger() : 0
+			int startMinorVersion = latestDevStart ? latestDevStart.matches['minor'].toInteger() : 0
+
+			if (latestDevStart &&
+				(startMajorVersion > version.major)
+				||
+				((startMajorVersion == version.major) && (startMinorVersion > version.minor))) {
+				version.major = startMajorVersion
+				version.minor = startMinorVersion
+			} else {
+				version.minor += 1
+			}
+
+			version.patch = 0
+			version.prereleaseTag = 'feature'
+			version.buildMetadata = "${new Date().format('yyyyMMdd')}-${head.id(8)}"
+		}
+
+		/*
+		 * The "develop" branch is treated the same as a feature branch, just the pre-release tag is set to "develop".
+		 */
+		onBranch('develop') {
+			version.prereleaseTag = 'develop'
+		}
+
+		/*
+		 * The "master" branch is used to build release versions. The pre-release tag is empty. If the commit being
+		 * built is tagged with a version number, the exact version of the tag is used; Otherwise the tagged version is
+		 * used with its patch level incremented by one.
+		 */
+		onBranch('master') {
+			def latestVersionTag = findLatestTag(releaseVersionTag)
+
+			if (latestVersionTag) {
+				int commitsSinceTag = countCommitsSince(latestVersionTag, true)
+				int patchVersionIncrement = Math.signum(commitsSinceTag) as int
+
+				version.patch += patchVersionIncrement
+			}
+		}
+
+		/*
+		 * On a release branch the build version is the one indicated in the branch name. The patch level is always set
+		 * to zero. The pre-release tag "rc" to denote a release candidate.
+		 */
+		onBranch(~/release\/(?<major>\d+)\.(?<minor>\d+)/) {
+			version.major = matches['major'].toInteger()
+			version.minor = matches['minor'].toInteger()
+			version.patch = 0
+			version.prereleaseTag = 'rc'
+		}
+
+		/*
+		 * On a hotfix branch the build version is the latest tagged release version with the patch level incremented
+		 * by one. The pre-prelse tag is set to "hotfix" to denote a hotfix test build.
+		 */
+		onBranch(~/hotfix\/.*/) {
+			version.patch += 1
+			version.prereleaseTag = 'hotfix'
+		}
+	}
+}
+
+project.version = gitVersion.determineVersion().toString().replaceAll('\\+', '-')
+
+task printVersion() {
+	doLast {
+		println project.version
+	}
+}

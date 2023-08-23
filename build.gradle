@@ -1,0 +1,146 @@
+plugins {
+	id 'java-gradle-plugin'
+	id 'jvm-test-suite'
+	id 'org.checkerframework'
+	id 'groovy'
+
+	id 'maven-publish'
+
+	id 'com.github.spotbugs'
+	id 'checkstyle'
+	id 'pmd'
+
+	id 'org.unbroken-dome.gitversion'
+
+	id 'idea'
+}
+
+//apply from: 'gradle/version.gradle'
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+
+	consistentResolution {
+		useCompileClasspathVersions()
+	}
+}
+
+checkerFramework {
+	checkers = [
+		'org.checkerframework.checker.nullness.NullnessChecker',
+		'org.checkerframework.common.initializedfields.InitializedFieldsChecker',
+		'org.checkerframework.checker.formatter.FormatterChecker',
+		'org.checkerframework.common.value.ValueChecker'
+	]
+}
+
+testing {
+	suites {
+		test(JvmTestSuite) {
+			useSpock()
+		}
+
+		integrationTest(JvmTestSuite) {
+			useSpock()
+
+			dependencies {
+				implementation project
+			}
+		}
+
+		functionalTest(JvmTestSuite) {
+			useSpock()
+		}
+	}
+}
+
+gradlePlugin {
+	plugins {
+		singularNode {
+			id = 'com.brunoritz.gradle.singular-node'
+			implementationClass = 'com.brunoritz.gradle.singularnode.SingularNodePlugin'
+		}
+	}
+
+	testSourceSets(sourceSets.integrationTest)
+	testSourceSets(sourceSets.functionalTest)
+}
+
+configurations {
+	integrationTestImplementation.extendsFrom testImplementation
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = 'UTF-8'
+}
+
+dependencies {
+	testImplementation(platform('org.spockframework:spock-bom:2.1-groovy-3.0'))
+
+	implementation 'com.github.spotbugs:spotbugs-annotations:4.7.1'
+	implementation 'io.vavr:vavr:0.10.4'
+	implementation 'net.jcip:jcip-annotations:1.0'
+
+	testImplementation 'org.spockframework:spock-core'
+	testImplementation 'org.spockframework:spock-junit4'
+	testImplementation 'junit:junit:4.13.2'
+}
+
+spotbugs {
+	excludeFilter.set(file('config/spotbugs-exclusions.xml'))
+	showStackTraces.set(false)
+
+	effort = 'max'
+}
+
+spotbugsMain {
+	reports {
+		xml {}
+	}
+}
+
+spotbugsIntegrationTest {
+	enabled = false
+}
+
+spotbugsFunctionalTest {
+	enabled = false
+}
+
+pmd {
+	toolVersion = '6.33.0'
+	consoleOutput = true
+	ruleSets = []
+	reportsDir = file("${buildDir}/reports/pmd")
+	ruleSetFiles = files("${rootDir}/config/pmd-rules.xml")
+	ignoreFailures = true
+}
+
+group = 'com.brunoritz.gradle'
+
+publishing {
+	repositories {
+		maven {
+			url = providers.environmentVariable('MVN_PUBLICATION_URL').getOrElse('')
+			allowInsecureProtocol = true
+
+			credentials {
+				username = providers.environmentVariable('MVN_PUBLICATION_USR')
+					.getOrElse('')
+				password = providers.environmentVariable('MVN_PUBLICATION_PSW')
+					.getOrElse('')
+			}
+		}
+	}
+}
+
+idea {
+	module {
+		testSourceDirs += file('src/functionalTest/groovy')
+		testResourceDirs += file('src/functionalTest/resources')
+
+		testSourceDirs += file('src/integrationTest/java')
+		testResourceDirs += file('src/integrationTest/resources')
+	}
+}
