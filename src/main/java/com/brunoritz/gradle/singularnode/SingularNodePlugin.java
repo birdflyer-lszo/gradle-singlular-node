@@ -4,8 +4,8 @@ import com.brunoritz.gradle.singularnode.execute.InstallPnpmPackagesTask;
 import com.brunoritz.gradle.singularnode.execute.InstallYarnPackagesTask;
 import com.brunoritz.gradle.singularnode.execute.PnpmTask;
 import com.brunoritz.gradle.singularnode.execute.YarnTask;
-import com.brunoritz.gradle.singularnode.platform.InstallationLayout;
-import com.brunoritz.gradle.singularnode.platform.InstallationLayoutFactory;
+import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
+import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory;
 import com.brunoritz.gradle.singularnode.platform.NodeDependencyFactory;
 import com.brunoritz.gradle.singularnode.setup.InstallNodeJsTask;
 import com.brunoritz.gradle.singularnode.setup.InstallPnpmTask;
@@ -19,7 +19,7 @@ import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
 
-import static com.brunoritz.gradle.singularnode.platform.InstallationLayoutFactory.platformDependentLayout;
+import static com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory.platformDependentLayout;
 
 import java.io.File;
 

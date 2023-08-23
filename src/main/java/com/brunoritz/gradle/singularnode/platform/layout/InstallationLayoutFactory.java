@@ -1,4 +1,4 @@
-package com.brunoritz.gradle.singularnode.platform;
+package com.brunoritz.gradle.singularnode.platform.layout;
 
 import io.vavr.control.Option;
 import org.gradle.api.file.DirectoryProperty;

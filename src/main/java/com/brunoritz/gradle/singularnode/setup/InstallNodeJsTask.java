@@ -1,6 +1,6 @@
 package com.brunoritz.gradle.singularnode.setup;
 
-import com.brunoritz.gradle.singularnode.platform.InstallationLayout;
+import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.ArchiveOperations;
 import org.gradle.api.file.DirectoryProperty;

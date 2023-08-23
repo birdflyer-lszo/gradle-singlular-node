@@ -6,7 +6,7 @@ import spock.lang.Specification
 
 import static com.brunoritz.gradle.singularnode.MockNodeInstallation.simulateNodeInstallationInProject
 import static com.brunoritz.gradle.singularnode.ProjectFactory.multiModuleProject
-import static com.brunoritz.gradle.singularnode.platform.InstallationLayoutFactory.platformDependentLayout
+import static com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory.platformDependentLayout
 
 /*
  * In order to save execution time, we do not actually install packages. Otherwise this test would also require a

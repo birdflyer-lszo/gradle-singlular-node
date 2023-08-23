@@ -1,5 +1,6 @@
 package com.brunoritz.gradle.singularnode.platform
 
+import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout
 import io.vavr.collection.HashMap
 import io.vavr.collection.List
 import org.gradle.api.Action

@@ -1,4 +1,4 @@
-package com.brunoritz.gradle.singularnode.platform;
+package com.brunoritz.gradle.singularnode.platform.layout;
 
 import java.io.File;
 

@@ -1,6 +1,6 @@
 package com.brunoritz.gradle.singularnode;
 
-import com.brunoritz.gradle.singularnode.platform.InstallationLayout;
+import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 
 import javax.inject.Inject;
 import java.io.File;

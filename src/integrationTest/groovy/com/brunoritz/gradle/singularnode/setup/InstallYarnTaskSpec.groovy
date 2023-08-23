@@ -6,7 +6,7 @@ import spock.lang.Specification
 
 import static com.brunoritz.gradle.singularnode.MockNodeInstallation.simulateNodeInstallationInProject
 import static com.brunoritz.gradle.singularnode.ProjectFactory.rootProject
-import static com.brunoritz.gradle.singularnode.platform.InstallationLayoutFactory.platformDependentLayout
+import static com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory.platformDependentLayout
 
 @IgnoreIf({ System.getProperty('os.name').containsIgnoreCase('windows') })
 class InstallYarnTaskSpec

@@ -79,6 +79,7 @@ dependencies {
 	implementation 'io.vavr:vavr:0.10.4'
 	implementation 'net.jcip:jcip-annotations:1.0'
 
+	testImplementation 'cglib:cglib-nodep:3.3.0'
 	testImplementation 'org.spockframework:spock-core'
 	testImplementation 'org.spockframework:spock-junit4'
 	testImplementation 'junit:junit:4.13.2'

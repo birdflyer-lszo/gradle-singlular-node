@@ -7,7 +7,7 @@ import spock.lang.Specification
 import java.nio.file.Files
 
 import static com.brunoritz.gradle.singularnode.ProjectFactory.rootProject
-import static com.brunoritz.gradle.singularnode.platform.InstallationLayoutFactory.platformDependentLayout
+import static com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory.platformDependentLayout
 
 class InstallNodeJsTaskSpec
 	extends Specification

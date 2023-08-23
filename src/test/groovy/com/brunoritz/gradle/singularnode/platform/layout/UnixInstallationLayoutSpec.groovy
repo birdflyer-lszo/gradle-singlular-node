@@ -1,10 +1,11 @@
-package com.brunoritz.gradle.singularnode.platform
+package com.brunoritz.gradle.singularnode.platform.layout
 
+import com.brunoritz.gradle.singularnode.platform.layout.UnixInstallationLayout
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
-class WindowsInstallationLayoutSpec
+class UnixInstallationLayoutSpec
 	extends Specification
 {
 	def 'It shall provide consumers with the installation directory of NodeJS'()
@@ -16,10 +17,25 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).nodeJsInstallDir()
+			def result = new UnixInstallationLayout(baseDirectory).nodeJsInstallDir()
 
 		then:
 			result == project.file('base-path/node')
+	}
+
+	def 'It shall provide consumers with the installation directory of NPM'()
+	{
+		given:
+			def project = newProject()
+			def baseDirectory = project.objects.directoryProperty()
+
+			baseDirectory.set(project.file('base-path'))
+
+		when:
+			def result = new UnixInstallationLayout(baseDirectory).npmInstallDirectory()
+
+		then:
+			result == project.file('base-path/npm')
 	}
 
 	def 'It shall provide consumers with the installation directory of Yarn'()
@@ -31,7 +47,7 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).yarnInstallDirectory()
+			def result = new UnixInstallationLayout(baseDirectory).yarnInstallDirectory()
 
 		then:
 			result == project.file('base-path/yarn')
@@ -46,7 +62,7 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).pnpmInstallDirectory()
+			def result = new UnixInstallationLayout(baseDirectory).pnpmInstallDirectory()
 
 		then:
 			result == project.file('base-path/pnpm')
@@ -61,10 +77,10 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).nodeJsBinDirectory()
+			def result = new UnixInstallationLayout(baseDirectory).nodeJsBinDirectory()
 
 		then:
-			result == project.file('base-path/node')
+			result == project.file('base-path/node/bin')
 	}
 
 	def 'It shall provide consumers with the path to the NodeJS executable'()
@@ -76,10 +92,10 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).pathOfNodeExecutable()
+			def result = new UnixInstallationLayout(baseDirectory).pathOfNodeExecutable()
 
 		then:
-			result == project.file('base-path/node/node.exe')
+			result == project.file('base-path/node/bin/node')
 	}
 
 	def 'It shall provide consumers with the path to the bundled NPM script'()
@@ -91,10 +107,10 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).pathOfBundledNpmScript()
+			def result = new UnixInstallationLayout(baseDirectory).pathOfBundledNpmScript()
 
 		then:
-			result == project.file('base-path/node/node_modules/npm/bin/npm-cli.js')
+			result == project.file('base-path/node/bin/npm')
 	}
 
 	def 'It shall provide consumers with the path to the bundled NPX script'()
@@ -106,10 +122,10 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).pathOfBundnledNpxScript()
+			def result = new UnixInstallationLayout(baseDirectory).pathOfBundnledNpxScript()
 
 		then:
-			result == project.file('base-path/node/node_modules/npm/bin/npx-cli.js')
+			result == project.file('base-path/node/bin/npx')
 	}
 
 	def 'It shall provide consumers with the path to bundled NPM CLI scripts'()
@@ -121,10 +137,10 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).pathOfBundledCliScript('foo-bar')
+			def result = new UnixInstallationLayout(baseDirectory).pathOfBundledCliScript('foo-bar')
 
 		then:
-			result == project.file('base-path/node/node_modules/npm/bin/foo-bar-cli.js')
+			result == project.file('base-path/node/lib/node_modules/npm/bin/foo-bar-cli.js')
 	}
 
 	def 'It shall providers consumers with the path to the installed Yarn script'()
@@ -136,10 +152,10 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).pathOfManagedYarnScript()
+			def result = new UnixInstallationLayout(baseDirectory).pathOfManagedYarnScript()
 
 		then:
-			result == project.file('base-path/yarn/node_modules/yarn/bin/yarn.js')
+			result == project.file('base-path/yarn/bin/yarn')
 	}
 
 	def 'It shall providers consumers with the path to the installed PNPM script'()
@@ -151,10 +167,10 @@ class WindowsInstallationLayoutSpec
 			baseDirectory.set(project.file('base-path'))
 
 		when:
-			def result = new WindowsInstallationLayout(baseDirectory).pathOfManagedPnpmScript()
+			def result = new UnixInstallationLayout(baseDirectory).pathOfManagedPnpmScript()
 
 		then:
-			result == project.file('base-path/pnpm/node_modules/pnpm/bin/pnpm.cjs')
+			result == project.file('base-path/pnpm/bin/pnpm')
 	}
 
 	private static Project newProject()

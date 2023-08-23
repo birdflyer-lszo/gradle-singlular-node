@@ -1,8 +1,8 @@
-package com.brunoritz.gradle.singularnode.platform;
+package com.brunoritz.gradle.singularnode.platform.layout;
+
+import static com.brunoritz.gradle.singularnode.platform.layout.PathFactory.combine;
 
 import org.gradle.api.file.DirectoryProperty;
-
-import static com.brunoritz.gradle.singularnode.platform.PathFactory.combine;
 
 import java.io.File;
 
@@ -10,31 +10,11 @@ import java.io.File;
  * The installation layout for Unix and compabible systems (macOs, Linux).
  */
 public class UnixInstallationLayout
-	implements InstallationLayout
+	extends InstallationLayout
 {
-	private final DirectoryProperty installBaseDir;
-
 	UnixInstallationLayout(DirectoryProperty installBaseDir)
 	{
-		this.installBaseDir = installBaseDir;
-	}
-
-	@Override
-	public File nodeJsInstallDir()
-	{
-		return installBaseDir.dir("node").get().getAsFile();
-	}
-
-	@Override
-	public File yarnInstallDirectory()
-	{
-		return installBaseDir.dir("yarn").get().getAsFile();
-	}
-
-	@Override
-	public File pnpmInstallDirectory()
-	{
-		return installBaseDir.dir("pnpm").get().getAsFile();
+		super(installBaseDir);
 	}
 
 	@Override

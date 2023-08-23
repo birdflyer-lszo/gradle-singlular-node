@@ -1,6 +1,6 @@
 package com.brunoritz.gradle.singularnode.execute;
 
-import com.brunoritz.gradle.singularnode.platform.InstallationLayout;
+import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import com.brunoritz.gradle.singularnode.platform.NodeCommand;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
