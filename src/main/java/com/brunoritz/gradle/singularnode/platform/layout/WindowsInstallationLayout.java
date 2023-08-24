@@ -1,8 +1,8 @@
 package com.brunoritz.gradle.singularnode.platform.layout;
 
-import static com.brunoritz.gradle.singularnode.platform.layout.PathFactory.combine;
-
 import org.gradle.api.file.DirectoryProperty;
+
+import static com.brunoritz.gradle.singularnode.platform.layout.PathFactory.combine;
 
 import java.io.File;
 

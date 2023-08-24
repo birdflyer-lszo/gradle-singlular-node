@@ -1,6 +1,5 @@
 package com.brunoritz.gradle.singularnode.platform.layout
 
-import com.brunoritz.gradle.singularnode.platform.layout.UnixInstallationLayout
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification

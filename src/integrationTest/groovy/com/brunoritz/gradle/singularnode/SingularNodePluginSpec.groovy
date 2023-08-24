@@ -1,8 +1,8 @@
 package com.brunoritz.gradle.singularnode
 
-import com.brunoritz.gradle.singularnode.execute.NpmTask
-import com.brunoritz.gradle.singularnode.execute.PnpmTask
-import com.brunoritz.gradle.singularnode.execute.YarnTask
+import com.brunoritz.gradle.singularnode.npm.NpmTask
+import com.brunoritz.gradle.singularnode.pnpm.PnpmTask
+import com.brunoritz.gradle.singularnode.yarn.YarnTask
 import org.gradle.api.artifacts.repositories.IvyArtifactRepository
 import org.gradle.api.internal.plugins.PluginApplicationException
 import org.gradle.testfixtures.ProjectBuilder
@@ -118,7 +118,6 @@ class SingularNodePluginSpec
 
 			pnpmScript.name.endsWith('pnpm')
 				|| pnpmScript.name.endsWith('pnpm.cjs')
-
 	}
 
 	def 'It shall add an Ivy repository to download NodeJS distributions'()
