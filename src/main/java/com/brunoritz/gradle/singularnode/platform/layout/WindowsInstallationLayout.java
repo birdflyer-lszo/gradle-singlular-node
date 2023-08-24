@@ -53,7 +53,7 @@ public class WindowsInstallationLayout
 	@Override
 	public File pathOfManagedNpmScript()
 	{
-		return combine(pnpmInstallDirectory(), "node_modules", "npm", "bin", "npm.js");
+		return combine(npmInstallDirectory(), "node_modules", "npm", "bin", "npm-cli.js");
 	}
 
 	@Override

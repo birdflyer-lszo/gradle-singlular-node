@@ -111,7 +111,7 @@ class SingularNodePluginSpec
 				|| nodeExecutable.name.endsWith('node.exe')
 
 			npmScript.name.endsWith('npm')
-				|| npmScript.name.endsWith('npm.cjs')
+				|| npmScript.name.endsWith('npm-cli.js')
 
 			yarnScript.name.endsWith('yarn')
 				|| yarnScript.name.endsWith('yarn.js')

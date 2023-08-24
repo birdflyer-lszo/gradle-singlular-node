@@ -142,6 +142,21 @@ class UnixInstallationLayoutSpec
 			result == project.file('base-path/node/lib/node_modules/npm/bin/foo-bar-cli.js')
 	}
 
+	def 'It shall providers consumers with the path to the installed NPM script'()
+	{
+		given:
+			def project = newProject()
+			def baseDirectory = project.objects.directoryProperty()
+
+			baseDirectory.set(project.file('base-path'))
+
+		when:
+			def result = new UnixInstallationLayout(baseDirectory).pathOfManagedNpmScript()
+
+		then:
+			result == project.file('base-path/npm/bin/npm')
+	}
+
 	def 'It shall providers consumers with the path to the installed Yarn script'()
 	{
 		given:

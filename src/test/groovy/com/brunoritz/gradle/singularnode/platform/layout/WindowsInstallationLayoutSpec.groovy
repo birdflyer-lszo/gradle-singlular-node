@@ -142,6 +142,21 @@ class WindowsInstallationLayoutSpec
 			result == project.file('base-path/node/node_modules/npm/bin/foo-bar-cli.js')
 	}
 
+	def 'It shall providers consumers with the path to the installed NPM script'()
+	{
+		given:
+			def project = newProject()
+			def baseDirectory = project.objects.directoryProperty()
+
+			baseDirectory.set(project.file('base-path'))
+
+		when:
+			def result = new WindowsInstallationLayout(baseDirectory).pathOfManagedNpmScript()
+
+		then:
+			result == project.file('base-path/npm/node_modules/npm/bin/npm-cli.js')
+	}
+
 	def 'It shall providers consumers with the path to the installed Yarn script'()
 	{
 		given:
