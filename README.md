@@ -47,6 +47,7 @@ The plugin can be configured using the `nodeJs` extension.
 ```groovy
 nodeJs {
 	nodeVersion.set('14.17.6')
+	npmVersion.set('6.14.18')
 	pnpmVersion.set('6.23.2')
 	yarnVersion.set('berry')
 }
@@ -58,19 +59,23 @@ further behavior can be found in the Javadoc documentation.
 | Name              | Description                                                       |
 |-------------------|-------------------------------------------------------------------|
 | `nodeVersion`*    | The version of NodeJS to install                                  |
+| `npmVersion`*     | The version of NPM to install                                     |
 | `pnpmVersion`*    | The version of PNPM to install                                    |
 | `yarnVersion`*    | The version of Yarn to install                                    |
 | `installBaseDir`  | The base directory where NodeJS and Yarn are to be installed into |
+| `npmInstallArgs`  | Additional arguments to pass to NPM for installing packages       |
 | `pnpmInstallArgs` | Additional arguments to pass to PNPM for installing packages      |
+| `yarnInstallArgs` | Additional arguments to pass to Yarn for installing packages      |
 
 To pass further arguments to the installation command, the `installYarnPackages` and `installPnpm` tasks support an
 `args` property.
 
 ## Usage
 
-Any non-root project applying the plugin gets `installYarnPackages` and `installPnpmPackages` tasks configured.
-Any `YarnTask` or `PnpmTask` they define will automatically depend on the package installation tasks to ensure the
-package installation.
+Any non-root project applying the plugin gets `installNpmPackages`, `installPnpmPackages` and `installYarnPackages`
+tasks configured.
+Any `NpmTask`, `PnpmTask` or `YarnTask` they define will automatically depend on the package installation tasks to
+ensure the installation of the dependencies defined in `package.json`.
 
 Any node task will use the runtime environment declared in the root project.
 
@@ -83,6 +88,7 @@ plugins {
 
 nodeJs {
 	nodeVersion.set('<version>')
+	npmVersion.set('<version>')
 	pnpmVersion.set('<version>')
 	yarnVersion.set('<version>')
 }
@@ -96,32 +102,43 @@ plugins {
 	id 'com.brunoritz.gradle.singular-node' version '<version>'
 }
 
-task buildAngular(type: YarnTask) {
+task buildWithNpm(type: NpmTask) {
 	args.set([
-		'run', 'build', '--',
-		'--aot',
-		'--no-progress'
+		'run', 'build'
 	])
 }
 
-task buildAngular(type: PnpmTask) {
+task buildWithPnpm(type: PnpmTask) {
+	args.set([
+		'run', 'build'
+	])
+}
+
+task buildWithYarn(type: YarnTask) {
 	args.set([
 		'run', 'build'
 	])
 }
 ```
 
-If needed, `YarnTask` and `PnpmTask` allow passing environment variables via the `environment` property.
+If needed, `NpmTask`, `PnpmTask` and `YarnTask` allow passing environment variables via the `environment` property.
 
 ```groovy
-task someYarnTask(tpe: YarnTask) {
+task someNpmTask(tpe: NpmTask) {
 	args.set(['run', 'my-script'])
 	environment.set([
 		SOME_VAR: 'some-value'
 	])
 }
 
-task someNpmTask(tpe: PnpmTask) {
+task somePnpmTask(tpe: PnpmTask) {
+	args.set(['run', 'my-script'])
+	environment.set([
+		SOME_VAR: 'some-value'
+	])
+}
+
+task someYarnTask(tpe: YarnTask) {
 	args.set(['run', 'my-script'])
 	environment.set([
 		SOME_VAR: 'some-value'
@@ -137,6 +154,7 @@ The extension provides the following properties.
 | Name               | Description                                         |
 |--------------------|-----------------------------------------------------|
 | `nodeJsExecutable` | The path to the NodeJS binary                       |
+| `npmScript`        | The path to the managed NPM script                  |
 | `pnpmScript`       | The path to the managed PNPM script                 |
 | `yarnScript`       | The path to the managed Yarn script                 |
 | `nodeJsBinDir`     | The directory in which the NodeJS binary is located |
