@@ -51,6 +51,12 @@ public class WindowsInstallationLayout
 	}
 
 	@Override
+	public File pathOfManagedNpmScript()
+	{
+		return combine(pnpmInstallDirectory(), "node_modules", "npm", "bin", "npm.js");
+	}
+
+	@Override
 	public File pathOfManagedYarnScript()
 	{
 		return combine(yarnInstallDirectory(), "node_modules", "yarn", "bin", "yarn.js");

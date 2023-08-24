@@ -16,6 +16,11 @@ public class ManagedNodeJs
 	public final File nodeJsExecutable;
 
 	/**
+	 * The path to the managed NPM script. The file being pointed at is the CLI script of PNPM.
+	 */
+	public final File npmScript;
+
+	/**
 	 * The path to the managed Yarn script. The file being pointed at is the CLI script of Yarn.
 	 */
 	public final File yarnScript;
@@ -34,6 +39,7 @@ public class ManagedNodeJs
 	public ManagedNodeJs(InstallationLayout layout)
 	{
 		nodeJsExecutable = layout.pathOfNodeExecutable();
+		npmScript = layout.pathOfManagedNpmScript();
 		yarnScript = layout.pathOfManagedYarnScript();
 		pnpmScript = layout.pathOfManagedPnpmScript();
 		nodeJsBinDir = layout.nodeJsBinDirectory();

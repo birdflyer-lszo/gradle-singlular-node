@@ -38,7 +38,7 @@ import java.io.File;
  * }
  *
  * // build.gradle
- * task showProcessEnv(type: PnpmTask) {
+ * task runTest(type: PnpmTask) {
  *     args.set([
  *         'run', 'test'
  *     ])

@@ -1,7 +1,7 @@
 package com.brunoritz.gradle.singularnode.execute;
 
-import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import com.brunoritz.gradle.singularnode.platform.NodeCommand;
+import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -9,12 +9,12 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.ListProperty;
-import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.process.ExecOperations;
@@ -23,54 +23,35 @@ import static org.gradle.api.tasks.PathSensitivity.RELATIVE;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 
 /**
- * The task type for defining custon Yarn tasks to execute. Any task that uses this class as its type will automatically
- * depend on the package installation task to enusure up-to-date packages.
- *
- * <b>Example Usage</b>
- * <pre>
- * // package.json
- * {
- *     "scripts": {
- *         "test": "node -e 'console.log(process.env)'"
- *     }
- * }
- *
- * // build.gradle
- * task runTest(type: YarnTask) {
- *     args.set([
- *         'run', 'test'
- *     ])
- * }
- * </pre>
+ * Installs packages declared in the {@code package.json} file.
  */
-public abstract class YarnTask
+public abstract class InstallNpmPackagesTask
 	extends DefaultTask
 {
 	private final ExecOperations processes;
+	private final File executionMarker;
 	private final File packageFile;
 	private final File lockFile;
 
 	@Inject
-	public YarnTask(ExecOperations processes, Project project)
+	public InstallNpmPackagesTask(ExecOperations processes, Project project)
 	{
 		this.processes = processes;
 
+		executionMarker = new File(project.file("node_modules"), ".install.executed");
 		packageFile = project.file("package.json");
-		lockFile = project.file("yarn.lock");
+		lockFile = project.file("package-lock.json");
 	}
 
+	/**
+	 * Optional arguments to pass to the package installation command. By default, no arguments are defined.
+	 */
 	@Input
 	@Optional
 	public abstract ListProperty<CharSequence> getArgs();
-
-	@Input
-	@Optional
-	public abstract MapProperty<CharSequence, CharSequence> getEnvironment();
-
-	@Internal
-	public abstract DirectoryProperty getInstallBaseDir();
 
 	@Internal
 	public abstract DirectoryProperty getWorkingDirectory();
@@ -96,17 +77,37 @@ public abstract class YarnTask
 		return lockFile.exists() ? lockFile : null;
 	}
 
+	/**
+	 * The execution marker file indicates that this task was executed. It is a compromise between reliability and
+	 * speed. Declaring {@code node_modules} an output directory would add a tremendous hashing overhead for Gradle.
+	 * <p>
+	 * Manual changes to {@code node_modules} or changes introduced by a build cannot be detected with this approach.
+	 */
+	@OutputFile
+	public File getExecutionMarkerFile()
+	{
+		return executionMarker;
+	}
+
 	@TaskAction
-	public void execute()
+	public void installPackages()
+		throws IOException
 	{
 		InstallationLayout layout = getInstallationLayout().get();
-		String yarnScript = layout.pathOfManagedYarnScript().getAbsolutePath();
+		String npmScript = layout.pathOfManagedNpmScript().getAbsolutePath();
 
 		new NodeCommand(processes, getWorkingDirectory().get().getAsFile(), layout)
-			.args(yarnScript)
+			.args(npmScript, "install")
 			.args(List.ofAll(getArgs().get()))
 			.withEnvironment(HashMap.ofAll(System.getenv()))
-			.withEnvironment(HashMap.ofAll(getEnvironment().get()))
 			.execute();
+
+		/*
+		 * Just mark that this task was successful. Making node_modules an output directory would result in a large
+		 * amount of time neeed to index that directory.
+		 */
+		if (!executionMarker.exists() && !executionMarker.createNewFile()) {
+			throw new IllegalStateException("Failed to create execution marker");
+		}
 	}
 }

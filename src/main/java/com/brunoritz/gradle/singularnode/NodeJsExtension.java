@@ -14,6 +14,18 @@ import javax.inject.Inject;
 public class NodeJsExtension
 {
 	/**
+	 * The version of NPM to be installed.
+	 * <p>
+	 * <b>This is a mandatory property.</b>
+	 */
+	public final Property<CharSequence> npmVersion;
+
+	/**
+	 * Arguments to pass to NPM when installing packages.
+	 */
+	public final ListProperty<CharSequence> npmInstallArgs;
+
+	/**
 	 * The version of NodeJS to be installed.
 	 * <p>
 	 * <b>This is a mandatory property.</b>
@@ -57,8 +69,13 @@ public class NodeJsExtension
 		Directory defaultInstallDir = project.getLayout().getProjectDirectory().dir("nodejs");
 
 		nodeVersion = project.getObjects().property(CharSequence.class);
+
+		npmVersion = project.getObjects().property(CharSequence.class);
+		npmInstallArgs = project.getObjects().listProperty(CharSequence.class);
+
 		yarnVersion = project.getObjects().property(CharSequence.class);
 		yarnInstallArgs = project.getObjects().listProperty(CharSequence.class);
+
 		pnpmVersion = project.getObjects().property(CharSequence.class);
 		pnpmInstallArgs = project.getObjects().listProperty(CharSequence.class);
 

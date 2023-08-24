@@ -1,13 +1,16 @@
 package com.brunoritz.gradle.singularnode;
 
+import com.brunoritz.gradle.singularnode.execute.InstallNpmPackagesTask;
 import com.brunoritz.gradle.singularnode.execute.InstallPnpmPackagesTask;
 import com.brunoritz.gradle.singularnode.execute.InstallYarnPackagesTask;
+import com.brunoritz.gradle.singularnode.execute.NpmTask;
 import com.brunoritz.gradle.singularnode.execute.PnpmTask;
 import com.brunoritz.gradle.singularnode.execute.YarnTask;
 import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory;
 import com.brunoritz.gradle.singularnode.platform.NodeDependencyFactory;
 import com.brunoritz.gradle.singularnode.setup.InstallNodeJsTask;
+import com.brunoritz.gradle.singularnode.setup.InstallNpmTask;
 import com.brunoritz.gradle.singularnode.setup.InstallPnpmTask;
 import com.brunoritz.gradle.singularnode.setup.InstallYarnTask;
 import org.gradle.api.Plugin;
@@ -24,18 +27,22 @@ import static com.brunoritz.gradle.singularnode.platform.layout.InstallationLayo
 import java.io.File;
 
 /**
- * The {@code Singular Node Installation} plugin provides a single NodeJS/Yarn/PNPM installation throughout the entire
- * project. Its intention is to reduce build time and complexity by only installing the tooling once and then allow any
- * subproject to consume it. It further reduces complexity by forcing the project to use a single version of the
- * tooling.
+ * The {@code Singular Node Installation} plugin provides a single NodeJS/NPM/Yarn/PNPM installation throughout the
+ * entire project. Its intention is to reduce build time and complexity by only installing the tooling once and then
+ * allow any subproject to consume it. It further reduces complexity by forcing the project to use a single version
+ * of the tooling.
  * <p>
  * This plugin provides a {@code nodeJs} extension through which the aspects of the tooling setup con be configured. The
  * extension is only available on the root project.
  * <p>
- * In order to simplify authoring of custom Yarn/PNPM task, the {@link YarnTask} and  {@link PnpmTask} types are made
- * available to the project via the extra properties {@code YarnTask} and  {@code PnpmTask}. That eliminates the need to
- * {@code import} the task type. With these properties in place, task authors can simply create new tasks using
+ * In order to simplify authoring of custom NPM/Yarn/PNPM task, the {@link NpmTask}, {@link YarnTask} and
+ * {@link PnpmTask} types are made available to the project via the extra properties {@code NpmTask}, {@code YarnTask}
+ * and {@code PnpmTask}. That eliminates the need to {@code import} the task type. With these properties in place, task
+ * authors can simply create new tasks using
  * <pre>
+ * task customNpmTask(type: NpmTask) {
+ *     // ...
+ * }
  * task customYarnTask(type: YarnTask) {
  *     // ...
  * }
@@ -50,6 +57,7 @@ import java.io.File;
  * Further details on the behavior can be found in the documentation of the tasks and the extension.
  *
  * @see NodeJsExtension
+ * @see NpmTask
  * @see YarnTask
  * @see PnpmTask
  */
@@ -91,6 +99,7 @@ public class SingularNodePlugin
 
 		TaskProvider<InstallNodeJsTask> nodeInstallationTask =
 			tasks.register("installNodeJs", InstallNodeJsTask.class);
+		TaskProvider<InstallNpmTask> npmInstallationTask = tasks.register("installNpm", InstallNpmTask.class);
 		TaskProvider<InstallYarnTask> yarnInstallationTask = tasks.register("installYarn", InstallYarnTask.class);
 		TaskProvider<InstallPnpmTask> pnpmInstallationTask = tasks.register("installPnpm", InstallPnpmTask.class);
 
@@ -98,6 +107,15 @@ public class SingularNodePlugin
 			task.setGroup(SINGULAR_NODE_GROUP);
 			task.getInstallationLayout().set(layout);
 			task.getNodeJsInstallDir().set(layout.nodeJsInstallDir());
+		});
+
+		npmInstallationTask.configure(task -> {
+			task.setGroup(SINGULAR_NODE_GROUP);
+			task.dependsOn(nodeInstallationTask);
+			task.getInstallationLayout().set(layout);
+			task.getWorkingDirectory().set(project.getProjectDir());
+			task.getNpmInstallDirectory().set(layout.npmInstallDirectory());
+			task.getNpmVersion().set(configuration.npmVersion);
 		});
 
 		yarnInstallationTask.configure(task -> {
@@ -132,16 +150,28 @@ public class SingularNodePlugin
 	private void createConsumerTasks(Project project)
 	{
 		NodeJsExtension configuration = pluginConfiguration(project);
+		TaskProvider<Task> npmSetupTask = rootProjectTask(project, "installNpm");
 		TaskProvider<Task> yarnSetupTask = rootProjectTask(project, "installYarn");
 		TaskProvider<Task> pnpmSetupTask = rootProjectTask(project, "installPnpm");
-		TaskProvider<InstallYarnPackagesTask> installYarnPackagesPackagesTask =
+		TaskProvider<InstallNpmPackagesTask> installNpmPackagesTask =
+			project.getTasks().register("installNpmPackages", InstallNpmPackagesTask.class);
+		TaskProvider<InstallYarnPackagesTask> installYarnPackagesTask =
 			project.getTasks().register("installYarnPackages", InstallYarnPackagesTask.class);
-		TaskProvider<InstallPnpmPackagesTask> installPnpmPackagesPackagesTask =
+		TaskProvider<InstallPnpmPackagesTask> installPnpmPackagesTask =
 			project.getTasks().register("installPnpmPackages", InstallPnpmPackagesTask.class);
 		InstallationLayout layout = platformDependentLayout(configuration.installBaseDir)
 			.getOrElseThrow(() -> new IllegalStateException("Running on unsupported OS"));
 
-		installYarnPackagesPackagesTask.configure(task -> {
+		installNpmPackagesTask.configure(task -> {
+			task.setGroup(SINGULAR_NODE_GROUP);
+			task.dependsOn(npmSetupTask);
+
+			task.getArgs().set(configuration.npmInstallArgs);
+			task.getWorkingDirectory().set(project.getProjectDir());
+			task.getInstallationLayout().set(layout);
+		});
+
+		installYarnPackagesTask.configure(task -> {
 			task.setGroup(SINGULAR_NODE_GROUP);
 			task.dependsOn(yarnSetupTask);
 
@@ -150,7 +180,7 @@ public class SingularNodePlugin
 			task.getInstallationLayout().set(layout);
 		});
 
-		installPnpmPackagesPackagesTask.configure(task -> {
+		installPnpmPackagesTask.configure(task -> {
 			task.setGroup(SINGULAR_NODE_GROUP);
 			task.dependsOn(pnpmSetupTask);
 
@@ -160,21 +190,29 @@ public class SingularNodePlugin
 		});
 
 		project.getTasks().whenTaskAdded(newTask -> {
+			if (newTask instanceof NpmTask newNpmTask) {
+				newNpmTask.dependsOn(installNpmPackagesTask);
+				newNpmTask.getWorkingDirectory().set(project.getProjectDir());
+				newNpmTask.getInstallBaseDir().set(configuration.installBaseDir);
+				newNpmTask.getInstallationLayout().set(layout);
+			}
+
 			if (newTask instanceof YarnTask newYarnTask) {
-				newYarnTask.dependsOn(installYarnPackagesPackagesTask);
+				newYarnTask.dependsOn(installYarnPackagesTask);
 				newYarnTask.getWorkingDirectory().set(project.getProjectDir());
 				newYarnTask.getInstallBaseDir().set(configuration.installBaseDir);
 				newYarnTask.getInstallationLayout().set(layout);
 			}
 
 			if (newTask instanceof PnpmTask newPnpmTask) {
-				newPnpmTask.dependsOn(installPnpmPackagesPackagesTask);
+				newPnpmTask.dependsOn(installPnpmPackagesTask);
 				newPnpmTask.getWorkingDirectory().set(project.getProjectDir());
 				newPnpmTask.getInstallBaseDir().set(configuration.installBaseDir);
 				newPnpmTask.getInstallationLayout().set(layout);
 			}
 		});
 
+		project.getExtensions().getExtraProperties().set("NpmTask", NpmTask.class);
 		project.getExtensions().getExtraProperties().set("YarnTask", YarnTask.class);
 		project.getExtensions().getExtraProperties().set("PnpmTask", PnpmTask.class);
 	}

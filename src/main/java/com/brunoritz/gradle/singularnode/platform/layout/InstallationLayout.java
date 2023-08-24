@@ -89,6 +89,13 @@ public abstract class InstallationLayout
 	public abstract File pathOfBundledCliScript(String scriptName);
 
 	/**
+	 * Returns the full path to the NPM installation managed by this plugin. This is the verison of PNPM to be used
+	 * for
+	 * all PNPM invocations except for installing the managed version itself.
+	 */
+	public abstract File pathOfManagedNpmScript();
+
+	/**
 	 * Returns the full path to the Yarn installation managed by this plugin. This is the verison of Yarn to be used
 	 * for
 	 * all Yarn invocations except for installing the managed version itself.

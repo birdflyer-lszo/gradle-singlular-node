@@ -50,6 +50,12 @@ public class UnixInstallationLayout
 	}
 
 	@Override
+	public File pathOfManagedNpmScript()
+	{
+		return combine(npmInstallDirectory(), "bin", "npm");
+	}
+
+	@Override
 	public File pathOfManagedYarnScript()
 	{
 		return combine(yarnInstallDirectory(), "bin", "yarn");

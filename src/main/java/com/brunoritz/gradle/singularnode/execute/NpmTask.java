@@ -1,7 +1,7 @@
 package com.brunoritz.gradle.singularnode.execute;
 
-import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import com.brunoritz.gradle.singularnode.platform.NodeCommand;
+import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import java.io.File;
 
 /**
- * The task type for defining custon Yarn tasks to execute. Any task that uses this class as its type will automatically
+ * The task type for defining custon NPM tasks to execute. Any task that uses this class as its type will automatically
  * depend on the package installation task to enusure up-to-date packages.
  *
  * <b>Example Usage</b>
@@ -38,14 +38,14 @@ import java.io.File;
  * }
  *
  * // build.gradle
- * task runTest(type: YarnTask) {
+ * task runTest(type: NpmTask) {
  *     args.set([
  *         'run', 'test'
  *     ])
  * }
  * </pre>
  */
-public abstract class YarnTask
+public abstract class NpmTask
 	extends DefaultTask
 {
 	private final ExecOperations processes;
@@ -53,12 +53,12 @@ public abstract class YarnTask
 	private final File lockFile;
 
 	@Inject
-	public YarnTask(ExecOperations processes, Project project)
+	public NpmTask(ExecOperations processes, Project project)
 	{
 		this.processes = processes;
 
 		packageFile = project.file("package.json");
-		lockFile = project.file("yarn.lock");
+		lockFile = project.file("package-lock.json");
 	}
 
 	@Input
@@ -100,10 +100,10 @@ public abstract class YarnTask
 	public void execute()
 	{
 		InstallationLayout layout = getInstallationLayout().get();
-		String yarnScript = layout.pathOfManagedYarnScript().getAbsolutePath();
+		String npmScript = layout.pathOfManagedNpmScript().getAbsolutePath();
 
 		new NodeCommand(processes, getWorkingDirectory().get().getAsFile(), layout)
-			.args(yarnScript)
+			.args(npmScript)
 			.args(List.ofAll(getArgs().get()))
 			.withEnvironment(HashMap.ofAll(System.getenv()))
 			.withEnvironment(HashMap.ofAll(getEnvironment().get()))
