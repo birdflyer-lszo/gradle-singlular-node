@@ -77,7 +77,7 @@ configurations {
 }
 
 dependencies {
-	testImplementation(platform('org.spockframework:spock-bom:2.1-groovy-3.0'))
+	testImplementation(platform('org.spockframework:spock-bom:2.3-groovy-4.0'))
 
 	implementation 'com.github.spotbugs:spotbugs-annotations:4.7.3'
 	implementation 'io.vavr:vavr:0.10.4'
