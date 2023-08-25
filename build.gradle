@@ -63,7 +63,7 @@ gradlePlugin {
 			implementationClass = 'com.brunoritz.gradle.singularnode.SingularNodePlugin'
 
 			displayName = 'Singular NodeJS Installation Plugin'
-			description = 'Gradle plugin use a single NodeJS distribution in a multi-module project'
+			description = 'Allows projects to use a single NodeJS distribution in a multi-module project'
 			tags.set(['node', 'npm', 'yarn', 'pnpm', 'multimodule'])
 		}
 	}
