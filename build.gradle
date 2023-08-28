@@ -114,7 +114,7 @@ pmd {
 	toolVersion = '6.33.0'
 	consoleOutput = true
 	ruleSets = []
-	reportsDir = file("${buildDir}/reports/pmd")
+	reportsDir = layout.buildDirectory.dir('reports/pmd').get().asFile
 	ruleSetFiles = files("${rootDir}/config/pmd-rules.xml")
 	ignoreFailures = true
 }
