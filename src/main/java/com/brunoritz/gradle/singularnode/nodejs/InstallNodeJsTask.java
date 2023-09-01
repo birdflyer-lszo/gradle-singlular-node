@@ -1,4 +1,4 @@
-package com.brunoritz.gradle.singularnode.platform;
+package com.brunoritz.gradle.singularnode.nodejs;
 
 import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import org.gradle.api.DefaultTask;
@@ -56,20 +56,22 @@ public abstract class InstallNodeJsTask
 	public void installNode()
 		throws IOException
 	{
-		InstallationLayout layout = getInstallationLayout().get();
-
-		cleanTarget(layout);
-		extractArchive(layout);
+		cleanTarget();
+		extractArchive();
 	}
 
-	private void cleanTarget(InstallationLayout layout)
+	private void cleanTarget()
 	{
+		InstallationLayout layout = getInstallationLayout().get();
+
+
 		files.delete(spec -> spec.delete(layout.nodeJsInstallDir()));
 	}
 
-	private void extractArchive(InstallationLayout layout)
+	private void extractArchive()
 		throws IOException
 	{
+		InstallationLayout layout = getInstallationLayout().get();
 		RegularFile nodeArchive = getNodeArchive().get();
 
 		if (nodeArchive.getAsFile().getName().endsWith(".zip")) {

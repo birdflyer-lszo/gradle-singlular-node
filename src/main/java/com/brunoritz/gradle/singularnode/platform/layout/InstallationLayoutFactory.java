@@ -17,8 +17,8 @@ public final class InstallationLayoutFactory
 
 	/**
 	 * Creates a new installation layout starting at the given installation base directoy. The layout represented
-	 * depends on the execution platforn. Any NodeJS and Yarn installations are to be made under {@code
-	 * installBaseDir}.
+	 * depends on the execution platforn. Any NodeJS and Yarn installations are to be made under
+	 * {@code installBaseDir}.
 	 *
 	 * @param installBaseDir
 	 * 	The parent directory of all tooling managed by this plugin

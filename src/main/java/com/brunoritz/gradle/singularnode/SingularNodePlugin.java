@@ -2,9 +2,9 @@ package com.brunoritz.gradle.singularnode;
 
 import com.brunoritz.gradle.singularnode.npm.NpmSetup;
 import com.brunoritz.gradle.singularnode.npm.NpmTask;
-import com.brunoritz.gradle.singularnode.platform.InstallNodeJsTask;
+import com.brunoritz.gradle.singularnode.nodejs.InstallNodeJsTask;
 import com.brunoritz.gradle.singularnode.platform.Lookup;
-import com.brunoritz.gradle.singularnode.platform.NodeJsSetup;
+import com.brunoritz.gradle.singularnode.nodejs.NodeJsSetup;
 import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory;
 import com.brunoritz.gradle.singularnode.pnpm.PnpmSetup;
