@@ -68,8 +68,7 @@ gradlePlugin {
 		}
 	}
 
-	testSourceSets(sourceSets.integrationTest)
-	testSourceSets(sourceSets.functionalTest)
+	testSourceSets(sourceSets.integrationTest, sourceSets.functionalTest)
 }
 
 configurations {
