@@ -1,7 +1,7 @@
 package com.brunoritz.gradle.singularnode.npm;
 
 import com.brunoritz.gradle.singularnode.NodeJsExtension;
-import com.brunoritz.gradle.singularnode.platform.InstallNodeJsTask;
+import com.brunoritz.gradle.singularnode.nodejs.InstallNodeJsTask;
 import com.brunoritz.gradle.singularnode.platform.Lookup;
 import com.brunoritz.gradle.singularnode.platform.layout.InstallationLayout;
 import org.gradle.api.Project;

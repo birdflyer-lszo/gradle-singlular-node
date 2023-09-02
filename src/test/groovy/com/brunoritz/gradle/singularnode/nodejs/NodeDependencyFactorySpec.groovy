@@ -1,4 +1,4 @@
-package com.brunoritz.gradle.singularnode.platform
+package com.brunoritz.gradle.singularnode.nodejs
 
 import spock.lang.Specification
 import spock.lang.Unroll
