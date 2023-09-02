@@ -8,11 +8,11 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 class PluginSpecYarn
 	extends Specification
 {
-	def rootProjectDir
-	def subProjectDir
-	def rootBuildFile
-	def subProjectBuildFile
-	def settingsFile
+	private File rootProjectDir
+	private File subProjectDir
+	private File rootBuildFile
+	private File subProjectBuildFile
+	private File settingsFile
 
 	def setup()
 	{
@@ -38,6 +38,11 @@ class PluginSpecYarn
 		settingsFile << '''
 				include ':subproject'
 			'''
+	}
+
+	def cleanup()
+	{
+		rootProjectDir.deleteOnExit()
 	}
 
 	def 'It shall be possible to run Yarn tasks'()
