@@ -1,4 +1,4 @@
-package com.brunoritz.gradle.singularnode.platform;
+package com.brunoritz.gradle.singularnode.nodejs;
 
 import io.vavr.control.Option;
 
@@ -16,7 +16,7 @@ import java.util.Properties;
  * <p>
  * 32bit platforms are not supported.
  */
-public final class NodeDependencyFactory
+final class NodeDependencyFactory
 {
 	private NodeDependencyFactory()
 	{
@@ -33,7 +33,7 @@ public final class NodeDependencyFactory
 	 *
 	 * @return The short-hand dependency string or {@code none()}, if the environment is not supported
 	 */
-	public static Option<String> computeDependencyString(CharSequence version, Properties systemProperties)
+	static Option<String> computeDependencyString(CharSequence version, Properties systemProperties)
 	{
 		Option<String> operatingSystem = computeOperatingSystem(systemProperties);
 

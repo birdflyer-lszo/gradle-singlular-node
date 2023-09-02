@@ -49,19 +49,20 @@ public abstract class InstallYarnTask
 	@TaskAction
 	public void installYarn()
 	{
-		InstallationLayout layout = getInstallationLayout().get();
-
-		cleanTarget(layout);
-		install(layout);
+		cleanTarget();
+		install();
 	}
 
-	private void cleanTarget(InstallationLayout layout)
+	private void cleanTarget()
 	{
+		InstallationLayout layout = getInstallationLayout().get();
+
 		files.delete(spec -> spec.delete(layout.yarnInstallDirectory()));
 	}
 
-	private void install(InstallationLayout layout)
+	private void install()
 	{
+		InstallationLayout layout = getInstallationLayout().get();
 		String bundledNpm = layout.pathOfBundledNpmScript().getAbsolutePath();
 		String npmPackage = String.format("yarn@%s", getYarnVersion().get());
 

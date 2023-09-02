@@ -1,4 +1,4 @@
-package com.brunoritz.gradle.singularnode.platform
+package com.brunoritz.gradle.singularnode.nodejs
 
 import com.brunoritz.gradle.singularnode.NodeJsExtension
 import spock.lang.IgnoreIf
