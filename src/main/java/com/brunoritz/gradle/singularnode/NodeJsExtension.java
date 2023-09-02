@@ -14,9 +14,14 @@ import javax.inject.Inject;
 public class NodeJsExtension
 {
 	/**
-	 * The version of NPM to be installed.
-	 * <p>
-	 * <b>This is a mandatory property.</b>
+	 * The version of NodeJS to be installed. If not defined, NodeJS will not be installed and trying to call the
+	 * NodeJS installation task will fail.
+	 */
+	public final Property<CharSequence> nodeVersion;
+
+	/**
+	 * The version of NPM to be installed. If not defined, NPM will not be installed and trying to call the NPM
+	 * installation task will fail.
 	 */
 	public final Property<CharSequence> npmVersion;
 
@@ -26,16 +31,8 @@ public class NodeJsExtension
 	public final ListProperty<CharSequence> npmInstallArgs;
 
 	/**
-	 * The version of NodeJS to be installed.
-	 * <p>
-	 * <b>This is a mandatory property.</b>
-	 */
-	public final Property<CharSequence> nodeVersion;
-
-	/**
-	 * The version of Yarn to be installed.
-	 * <p>
-	 * <b>This is a mandatory property.</b>
+	 * The version of Yarn to be installed. If not defined, Yarn will not be installed and trying to call the Yarn
+	 * installation task will fail.
 	 */
 	public final Property<CharSequence> yarnVersion;
 
@@ -45,9 +42,8 @@ public class NodeJsExtension
 	public final ListProperty<CharSequence> yarnInstallArgs;
 
 	/**
-	 * The version of PNPM to be installed.
-	 * <p>
-	 * <b>This is a mandatory property.</b>
+	 * The version of PNPM to be installed. If not defined, PNPM will not be installed and trying to call the PNPM
+	 * installation task will fail.
 	 */
 	public final Property<CharSequence> pnpmVersion;
 

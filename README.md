@@ -18,25 +18,12 @@ that applies the plugin can just consume the tooling installed by the plugin.
 
 ## Installation
 
-The plugin can be applied to any project using the `plugins` closure. In order for the plugin to work, it has to be
-applied on the root project as well.
+The plugin can be applied to any project. In order for the plugin to work, it has to be applied on the root project as
+well.
 
 ```groovy
 plugins {
 	id 'com.brunoritz.gradle.singular-node' version '<version>'
-}
-```
-
-Note that since the plugin is contained in a private Maven repository, that repository will need to be configured,
-preferably in `settings.gradle`.
-
-```groovy
-pluginManagement {
-	repositories {
-		maven {
-			url = '<private-repo-url>'
-		}
-	}
 }
 ```
 
@@ -53,22 +40,19 @@ nodeJs {
 }
 ```
 
-The following properties are available. Those marked with an asterisk are mandatory. Details on the default values and
-further behavior can be found in the Javadoc documentation.
+The following properties are available. Details on the default values and further behavior can be found in the Javadoc
+documentation.
 
 | Name              | Description                                                       |
 |-------------------|-------------------------------------------------------------------|
-| `nodeVersion`*    | The version of NodeJS to install                                  |
-| `npmVersion`*     | The version of NPM to install                                     |
-| `pnpmVersion`*    | The version of PNPM to install                                    |
-| `yarnVersion`*    | The version of Yarn to install                                    |
+| `nodeVersion`     | The version of NodeJS to install                                  |
+| `npmVersion`      | The version of NPM to install                                     |
+| `pnpmVersion`     | The version of PNPM to install                                    |
+| `yarnVersion`     | The version of Yarn to install                                    |
 | `installBaseDir`  | The base directory where NodeJS and Yarn are to be installed into |
 | `npmInstallArgs`  | Additional arguments to pass to NPM for installing packages       |
 | `pnpmInstallArgs` | Additional arguments to pass to PNPM for installing packages      |
 | `yarnInstallArgs` | Additional arguments to pass to Yarn for installing packages      |
-
-To pass further arguments to the installation command, the `installYarnPackages` and `installPnpm` tasks support an
-`args` property.
 
 ## Usage
 
