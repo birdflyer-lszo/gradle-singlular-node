@@ -12,14 +12,8 @@ jobs:
             matrix:
                 config:
                     -   os: ubuntu-latest
-                        params: "build integrationTest functionalTest"
-
                     -   os: windows-latest
-                        params: "build integrationTest functionalTest"
-
                     -   os: macos-latest
-                        params: "build integrationTest functionalTest"
-
         steps:
             -   name: Checkout Source Code
                 uses: actions/checkout@v3.6.0
@@ -35,5 +29,11 @@ jobs:
                 with:
                     cache-read-only: ${{ github.event_name == 'pull_request' }}
 
-            -   name: Build and Unit Test
-                run: ./gradlew ${{ matrix.config.params }}
+            -   name: Build and Unit Testing
+                run: ./gradlew build
+
+            -   name: Integration Testing
+                run: ./gradlew integrationTest
+
+            -   name: Functional Testing
+                run: ./gradlew functionalTest
