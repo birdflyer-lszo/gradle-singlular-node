@@ -126,16 +126,35 @@ class SingularNodePluginSpec
 			def rootProject = rootProject()
 
 		when:
-			def repository = rootProject.repositories.findByName('nodejs')
+			def repository = rootProject.repositories.findByName('com.brunoritz.gradle.singularnode.nodeJsIvy')
 
 		then:
 			/*
              * The repository interface does not permit much more validation than what is below. In order to finally
              * validate the proper working of the repository a functional test of the plugin is needed.
              */
-			repository != null
 			IvyArtifactRepository.isInstance(repository)
 			repository.url.toString() == 'https://nodejs.org/dist'
+	}
+
+	def 'It shall be possible to specify an alternative download base URL'()
+	{
+		given:
+			def project = rootProject()
+			def configuration = project.extensions.getByType(NodeJsExtension)
+
+			configuration.nodeDownloadBase.set('https://user-defined-mirror.local')
+
+		when:
+			def repository = project.repositories.getByName('com.brunoritz.gradle.singularnode.nodeJsIvy')
+
+		then:
+			/*
+             * The repository interface does not permit much more validation than what is below. In order to finally
+             * validate the proper working of the repository a functional test of the plugin is needed.
+             */
+			IvyArtifactRepository.isInstance(repository)
+			repository.url.toString() == 'https://user-defined-mirror.local'
 	}
 
 	def 'It shall produce an error, if the plugin is applied to a subproject, but missing on the root project'()
