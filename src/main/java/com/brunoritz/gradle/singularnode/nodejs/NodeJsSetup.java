@@ -12,6 +12,9 @@ import static com.brunoritz.gradle.singularnode.platform.layout.InstallationLayo
 
 import java.io.File;
 
+/**
+ * Configures all tasks, repositories and dependencies required for installing NodeJS locally.
+ */
 public final class NodeJsSetup
 {
 	private NodeJsSetup()
@@ -19,19 +22,33 @@ public final class NodeJsSetup
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Configures the project to support installing NodeJS. In particular, this method
+	 * <ul>
+	 *     <li>Creates a {@code nodeJs} extension via which the installation can be customized</li>
+	 *     <li>Creates an Ivy repository that is used to fetch the NodeJS archive from</li>
+	 *     <li>Creates a depdency configuration for the specific NdeJS version</li>
+	 *     <li>Creates an {@code installNodeJs} task that performs the actual installation</li>
+	 * </ul>
+	 *
+	 * @param project
+	 * 	The project that shall provide installation support (normally the root project)
+	 *
+	 * @return The task that performs the actual installation
+	 */
 	public static TaskProvider<InstallNodeJsTask> configureNodeJsInstallation(Project project)
 	{
-		TaskProvider<InstallNodeJsTask> nodeInstallationTask = registerInstallTask(project);
+		NodeJsExtension configuration = project.getExtensions().create("nodeJs", NodeJsExtension.class);
+		TaskProvider<InstallNodeJsTask> nodeInstallationTask = registerInstallTask(project, configuration);
 
-		project.afterEvaluate(evauated -> createNodeDependency(evauated, nodeInstallationTask));
-		configureNodeRepository(project);
+		configureNodeRepository(project, configuration);
+		createNodeDependency(project, nodeInstallationTask);
 
 		return nodeInstallationTask;
 	}
 
-	private static TaskProvider<InstallNodeJsTask> registerInstallTask(Project project)
+	private static TaskProvider<InstallNodeJsTask> registerInstallTask(Project project, NodeJsExtension configuration)
 	{
-		NodeJsExtension configuration = project.getExtensions().create("nodeJs", NodeJsExtension.class);
 		InstallationLayout layout = platformDependentLayout(configuration.installBaseDir)
 			.getOrElseThrow(() -> new IllegalStateException("Running on unsupported OS"));
 		TaskProvider<InstallNodeJsTask> nodeInstallationTask =
@@ -46,11 +63,11 @@ public final class NodeJsSetup
 		return nodeInstallationTask;
 	}
 
-	private static void configureNodeRepository(Project project)
+	private static void configureNodeRepository(Project project, NodeJsExtension configuration)
 	{
 		project.getRepositories().ivy(repo -> {
-			repo.setName("nodejs");
-			repo.setUrl("https://nodejs.org/dist");
+			repo.setName("com.brunoritz.gradle.singularnode.nodeJsIvy");
+			repo.setUrl(configuration.nodeDownloadBase);
 			repo.patternLayout(layout -> layout.artifact("v[revision]/[artifact](-v[revision]-[classifier]).[ext]"));
 			repo.metadataSources(IvyArtifactRepository.MetadataSources::artifact);
 			repo.content(content -> content.includeModule("org.nodejs", "node"));
@@ -59,6 +76,13 @@ public final class NodeJsSetup
 
 	private static void createNodeDependency(Project project, TaskProvider<InstallNodeJsTask> nodeInstallationTask)
 	{
+		Provider<File> archiveProvider = project.getProviders().provider(() -> nodeJsArchive(project));
+
+		nodeInstallationTask.configure(task -> task.getNodeArchive().set(project.getLayout().file(archiveProvider)));
+	}
+
+	private static File nodeJsArchive(Project project)
+	{
 		NodeJsExtension configuration = project.getExtensions().getByType(NodeJsExtension.class);
 		String nodeDependencySpec = NodeDependencyFactory.computeDependencyString(
 				configuration.nodeVersion.get(),
@@ -66,14 +90,11 @@ public final class NodeJsSetup
 			)
 			.getOrElseThrow(() -> new IllegalStateException("Running on unsupported operating system"));
 		Dependency nodeDependency = project.getDependencies().create(nodeDependencySpec);
-		Provider<File> archiveProvider = project.getProviders().provider(() ->
-			project.getConfigurations().detachedConfiguration(nodeDependency)
-				.setTransitive(false)
-				.resolve()
-				.iterator()
-				.next()
-		);
 
-		nodeInstallationTask.configure(task -> task.getNodeArchive().set(project.getLayout().file(archiveProvider)));
+		return project.getConfigurations().detachedConfiguration(nodeDependency)
+			.setTransitive(false)
+			.resolve()
+			.iterator()
+			.next();
 	}
 }
