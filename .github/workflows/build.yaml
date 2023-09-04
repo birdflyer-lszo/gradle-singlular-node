@@ -17,6 +17,8 @@ jobs:
         steps:
             -   name: Checkout Source Code
                 uses: actions/checkout@v3.6.0
+                with:
+                    fetch-depth: '0'
 
             -   name: Install Java
                 uses: actions/setup-java@v3.12.0
