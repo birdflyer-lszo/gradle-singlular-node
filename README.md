@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml)
 [![License](https://img.shields.io/github/license/node-gradle/gradle-node-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)
+![Version](https://img.shields.io/badge/Version-1.1.0-orange.svg)
 
 ## About
 
