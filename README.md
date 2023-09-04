@@ -79,7 +79,7 @@ nodeJs {
 }
 ```
 
-A subproject can then configure tasks. The `nodeJs` extension will not be avaiable in the subproject itself. It is only
+A subproject can then configure tasks. The `nodeJs` extension will not be available in the subproject itself. It is only
 available on the root project.
 
 ```groovy
