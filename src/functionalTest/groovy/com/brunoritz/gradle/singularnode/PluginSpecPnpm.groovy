@@ -30,8 +30,8 @@ class PluginSpecPnpm
 				}
 
 				nodeJs {
-					nodeVersion.set('14.17.6')
-					pnpmVersion.set('6.23.2')
+					nodeVersion.set('20.6.0')
+					pnpmVersion.set('8.7.1')
 				}
 			'''
 

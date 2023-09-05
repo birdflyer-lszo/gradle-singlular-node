@@ -3,6 +3,7 @@
 ## 1.2.0
 
 * Added a `nodeDownloadBase` option to provide custom base URL for NodeJS download
+* Added support for Apple silicon versions of NodeJS
 * Eliminated the need to depend on `project.afterEvaluate`
 
 ## 1.1.0

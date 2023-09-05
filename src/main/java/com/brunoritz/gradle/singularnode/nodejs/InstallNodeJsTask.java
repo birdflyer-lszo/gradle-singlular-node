@@ -64,7 +64,6 @@ public abstract class InstallNodeJsTask
 	{
 		InstallationLayout layout = getInstallationLayout().get();
 
-
 		files.delete(spec -> spec.delete(layout.nodeJsInstallDir()));
 	}
 

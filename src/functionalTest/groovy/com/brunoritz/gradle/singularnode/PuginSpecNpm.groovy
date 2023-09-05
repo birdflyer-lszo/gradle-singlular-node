@@ -30,8 +30,8 @@ class PuginSpecNpm
 				}
 
 				nodeJs {
-					nodeVersion.set('14.17.6')
-					npmVersion.set('6.14.18')
+					nodeVersion.set('20.6.0')
+					npmVersion.set('10.0.0')
 				}
 			'''
 
@@ -70,7 +70,7 @@ class PuginSpecNpm
 				.build()
 
 		then:
-			result.output.contains('npm: \'6.14.18\'')
+			result.output.contains('npm: \'10.0.0\'')
 			result.task(':subproject:runNpm').outcome == SUCCESS
 	}
 
