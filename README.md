@@ -1,6 +1,6 @@
 # Singular Node Installation Plugin
 
-[![Build](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml)
+[![build](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml/badge.svg?branch=master&event=push)](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml)
 [![License](https://img.shields.io/github/license/node-gradle/gradle-node-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 ![Version](https://img.shields.io/badge/Version-1.2.0-orange.svg)
 
