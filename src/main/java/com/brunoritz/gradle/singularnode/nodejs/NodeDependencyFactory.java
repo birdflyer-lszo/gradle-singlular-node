@@ -1,6 +1,7 @@
 package com.brunoritz.gradle.singularnode.nodejs;
 
 import io.vavr.control.Option;
+import io.vavr.control.Try;
 
 import java.util.Locale;
 import java.util.Properties;
@@ -37,11 +38,11 @@ final class NodeDependencyFactory
 	{
 		Option<String> operatingSystem = computeOperatingSystem(systemProperties);
 
-		// For now, only x64 support, M1 later
 		return operatingSystem.map(osName ->
-			String.format("org.nodejs:node:%s:%s-x64@%s",
+			String.format("org.nodejs:node:%s:%s-%s@%s",
 				version,
 				osName,
+				computeArchitecture(systemProperties, version),
 				computeExtension(systemProperties)
 			)
 		);
@@ -60,6 +61,27 @@ final class NodeDependencyFactory
 		} else {
 			return Option.none();
 		}
+	}
+
+	private static String computeArchitecture(Properties systemProperties, CharSequence version)
+	{
+		String osArchitecture = systemProperties.getProperty("os.arch", "").toLowerCase(Locale.ENGLISH);
+		Option<Integer> majorVersion = extractMajorVersion(version);
+
+		if (majorVersion.isDefined() && (majorVersion.get() >= 16) && "aarch64".equals(osArchitecture)) {
+			return "arm64";
+		} else {
+			return "x64";
+		}
+	}
+
+	private static Option<Integer> extractMajorVersion(CharSequence version)
+	{
+		String[] parts = version.toString().split("\\.");
+
+		return Try.of(() -> Integer.parseInt(parts[0]))
+			.map(Option::of)
+			.getOrElse(Option.none());
 	}
 
 	private static String computeExtension(Properties systemProperties)

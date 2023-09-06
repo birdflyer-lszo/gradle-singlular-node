@@ -20,6 +20,14 @@ public class NodeJsExtension
 	public final Property<CharSequence> nodeVersion;
 
 	/**
+	 * The URL from which to download NodeJS. Subdirectories will be computed via an Ivy repository (and its dependency
+	 * pattern).
+	 * <p>
+	 * Defaults to {@code https://nodejs.org/dist}.
+	 */
+	public final Property<CharSequence> nodeDownloadBase;
+
+	/**
 	 * The version of NPM to be installed. If not defined, NPM will not be installed and trying to call the NPM
 	 * installation task will fail.
 	 */
@@ -63,6 +71,9 @@ public class NodeJsExtension
 	public NodeJsExtension(Project project)
 	{
 		Directory defaultInstallDir = project.getLayout().getProjectDirectory().dir("nodejs");
+
+		nodeDownloadBase = project.getObjects().property(CharSequence.class);
+		nodeDownloadBase.convention("https://nodejs.org/dist");
 
 		nodeVersion = project.getObjects().property(CharSequence.class);
 

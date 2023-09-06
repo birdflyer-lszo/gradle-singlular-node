@@ -30,7 +30,7 @@ class PluginSpecYarn
 				}
 
 				nodeJs {
-					nodeVersion.set('14.17.6')
+					nodeVersion.set('20.6.0')
 					yarnVersion.set('berry')
 				}
 			'''

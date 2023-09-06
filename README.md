@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml)
 [![License](https://img.shields.io/github/license/node-gradle/gradle-node-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)
+![Version](https://img.shields.io/badge/Version-1.2.0-orange.svg)
 
 ## About
 
@@ -43,16 +43,17 @@ nodeJs {
 The following properties are available. Details on the default values and further behavior can be found in the Javadoc
 documentation.
 
-| Name              | Description                                                       |
-|-------------------|-------------------------------------------------------------------|
-| `nodeVersion`     | The version of NodeJS to install                                  |
-| `npmVersion`      | The version of NPM to install                                     |
-| `pnpmVersion`     | The version of PNPM to install                                    |
-| `yarnVersion`     | The version of Yarn to install                                    |
-| `installBaseDir`  | The base directory where NodeJS and Yarn are to be installed into |
-| `npmInstallArgs`  | Additional arguments to pass to NPM for installing packages       |
-| `pnpmInstallArgs` | Additional arguments to pass to PNPM for installing packages      |
-| `yarnInstallArgs` | Additional arguments to pass to Yarn for installing packages      |
+| Name              | Description                                                                        |
+|-------------------|------------------------------------------------------------------------------------|
+| `downloadBase`    | The base URL from which to download NodeJS (defaults to `https://nodejs.org/dist`) |
+| `nodeVersion`     | The version of NodeJS to install                                                   |
+| `npmVersion`      | The version of NPM to install                                                      |
+| `pnpmVersion`     | The version of PNPM to install                                                     |
+| `yarnVersion`     | The version of Yarn to install                                                     |
+| `installBaseDir`  | The base directory where NodeJS and Yarn are to be installed into                  |
+| `npmInstallArgs`  | Additional arguments to pass to NPM for installing packages                        |
+| `pnpmInstallArgs` | Additional arguments to pass to PNPM for installing packages                       |
+| `yarnInstallArgs` | Additional arguments to pass to Yarn for installing packages                       |
 
 ## Usage
 
@@ -78,7 +79,7 @@ nodeJs {
 }
 ```
 
-A subproject can then configure tasks. The `nodeJs` extension will not be avaiable in the subproject itself. It is only
+A subproject can then configure tasks. The `nodeJs` extension will not be available in the subproject itself. It is only
 available on the root project.
 
 ```groovy
