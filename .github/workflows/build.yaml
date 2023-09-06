@@ -48,4 +48,25 @@ jobs:
                 with:
                     commit: ${{github.event.workflow_run.head_sha}}
                     check_name: Test Report ${{ matrix.config.os }}
-                    report_paths: '**/build/test-results/**/TEST-*.xml'
+                    report_paths: build/test-results/**/TEST-*.xml
+
+            -   name: Publish Checkstyle Report
+                uses: jwgmeligmeyling/checkstyle-github-action@master
+                if: matrix.config.os == 'ubuntu-latest'
+                with:
+                    title: CheckStyle Report
+                    path: build/reports/checkstyle/main.xml
+
+            -   name: Publish PMD Report
+                uses: jwgmeligmeyling/pmd-github-action@master
+                if: matrix.config.os == 'ubuntu-latest'
+                with:
+                    title: PMD Report
+                    path: build/reports/pmd/main.xml
+
+            -   name: Publish SpotBugs Report
+                uses: jwgmeligmeyling/spotbugs-github-action@master
+                if: matrix.config.os == 'ubuntu-latest'
+                with:
+                    title: SpotBugs Report
+                    path: build/reports/spotbugs/main.xml
