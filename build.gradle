@@ -76,16 +76,12 @@ configurations {
 }
 
 dependencies {
-	testImplementation(platform('org.spockframework:spock-bom:2.1-groovy-3.0'))
-
 	implementation 'com.github.spotbugs:spotbugs-annotations:4.7.3'
 	implementation 'io.vavr:vavr:0.10.4'
 	implementation 'net.jcip:jcip-annotations:1.0'
 
 	testImplementation 'cglib:cglib-nodep:3.3.0'
 	testImplementation 'org.spockframework:spock-core'
-	testImplementation 'org.spockframework:spock-junit4'
-	testImplementation 'junit:junit:4.13.2'
 }
 
 spotbugs {
