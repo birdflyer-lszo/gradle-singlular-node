@@ -32,9 +32,9 @@ public abstract class InstallYarnPackagesTask
 	extends DefaultTask
 {
 	private final ExecOperations processes;
-	private final File executionMarker;
 	private final File packageFile;
 	private final File lockFile;
+	private final File executionMarker;
 
 	@Inject
 	public InstallYarnPackagesTask(ExecOperations processes, Project project)
@@ -92,12 +92,6 @@ public abstract class InstallYarnPackagesTask
 	@TaskAction
 	public void installPackages()
 		throws IOException
-	{
-		performInstallation();
-		markSuccessfulExecution();
-	}
-
-	private void performInstallation()
 	{
 		InstallationLayout layout = getInstallationLayout().get();
 		String yarnScript = layout.pathOfManagedYarnScript().getAbsolutePath();

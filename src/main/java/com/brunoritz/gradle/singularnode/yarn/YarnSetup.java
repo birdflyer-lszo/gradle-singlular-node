@@ -44,7 +44,6 @@ public final class YarnSetup
 			task.setGroup(GROUP);
 			task.dependsOn(nodeInstallationTask);
 			task.getInstallationLayout().set(layout);
-			task.getInstallationLayout().set(layout);
 			task.getWorkingDirectory().set(project.getProjectDir());
 			task.getYarnInstallDirectory().set(layout.yarnInstallDirectory());
 			task.getYarnVersion().set(configuration.yarnVersion);
@@ -83,7 +82,6 @@ public final class YarnSetup
 			if (newTask instanceof YarnTask newYarnTask) {
 				newYarnTask.dependsOn(installYarnPackagesTask);
 				newYarnTask.getWorkingDirectory().set(project.getProjectDir());
-				newYarnTask.getInstallBaseDir().set(configuration.installBaseDir);
 				newYarnTask.getInstallationLayout().set(layout);
 			}
 		});
