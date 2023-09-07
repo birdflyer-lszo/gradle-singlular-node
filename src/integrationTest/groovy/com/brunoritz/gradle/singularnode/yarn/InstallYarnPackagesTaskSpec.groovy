@@ -81,6 +81,6 @@ class InstallYarnPackagesTaskSpec
 			task.installPackages()
 
 		then:
-			new File(subProject.file('node_modules'), '.install.executed').exists()
+			new File(subProject.projectDir, '.install.executed').exists()
 	}
 }

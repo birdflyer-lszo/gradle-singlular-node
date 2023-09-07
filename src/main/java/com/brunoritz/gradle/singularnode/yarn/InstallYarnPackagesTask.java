@@ -41,9 +41,9 @@ public abstract class InstallYarnPackagesTask
 	{
 		this.processes = processes;
 
-		executionMarker = new File(project.file("node_modules"), ".install.executed");
 		packageFile = project.file("package.json");
 		lockFile = project.file("yarn.lock");
+		executionMarker = new File(project.getProjectDir(), ".install.executed");
 	}
 
 	/**
@@ -107,21 +107,11 @@ public abstract class InstallYarnPackagesTask
 			.args(List.ofAll(getArgs().get()))
 			.withEnvironment(HashMap.ofAll(System.getenv()))
 			.execute();
-	}
-
-	private void markSuccessfulExecution()
-		throws IOException
-	{
-		File nodeModulesDir = executionMarker.getParentFile();
 
 		/*
 		 * Just mark that this task was successful. Making node_modules an output directory would result in a large
 		 * amount of time neeed to index that directory.
 		 */
-		if ((nodeModulesDir != null) && !nodeModulesDir.exists() && !nodeModulesDir.mkdirs()) {
-			throw new IllegalStateException("Failed to create node_modules directory");
-		}
-
 		if (!executionMarker.exists() && !executionMarker.createNewFile()) {
 			throw new IllegalStateException("Failed to create execution marker");
 		}
