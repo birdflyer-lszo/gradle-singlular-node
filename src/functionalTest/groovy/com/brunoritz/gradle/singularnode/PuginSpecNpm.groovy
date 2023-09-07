@@ -25,19 +25,19 @@ class PuginSpecNpm
 		subProjectDir.mkdirs()
 
 		rootBuildFile << '''
-				plugins {
-				    id 'com.brunoritz.gradle.singular-node'
-				}
+			plugins {
+			    id 'com.brunoritz.gradle.singular-node'
+			}
 
-				nodeJs {
-					nodeVersion.set('20.6.0')
-					npmVersion.set('10.0.0')
-				}
-			'''
+			nodeJs {
+				nodeVersion.set('20.6.0')
+				npmVersion.set('10.0.0')
+			}
+		'''
 
 		settingsFile << '''
-				include ':subproject'
-			'''
+			include ':subproject'
+		'''
 	}
 
 	def cleanup()
@@ -49,6 +49,7 @@ class PuginSpecNpm
 	{
 		given:
 			def packageFile = new File(subProjectDir, 'package.json')
+			def scriptFile = new File(subProjectDir, 'test.js')
 
 			subProjectBuildFile << '''
 				plugins {
@@ -56,11 +57,30 @@ class PuginSpecNpm
 				}
 
 				task runNpm(type: NpmTask) {
-					args.set(['version'])
+					args.set([
+						'run',
+						'test'
+					])
 				}
 			'''
 
-			packageFile << '{}'
+			scriptFile << '''
+				var colors = require('colors');
+
+				console.log(colors.green('script output'));
+			'''
+
+			packageFile << '''
+				{
+					"scripts": {
+						"test": "node test.js"
+					},
+
+					"dependencies": {
+						"colors": "1.4.0"
+					}
+				}
+			'''
 
 		when:
 			def result = GradleRunner.create()
@@ -70,8 +90,8 @@ class PuginSpecNpm
 				.build()
 
 		then:
-			result.output.contains('npm: \'10.0.0\'')
 			result.task(':subproject:runNpm').outcome == SUCCESS
+			result.output.contains('script output')
 	}
 
 	def 'It shall be possible to pass environment variables to scripts via NPM'()
@@ -116,8 +136,8 @@ class PuginSpecNpm
 				.build()
 
 		then:
+			result.task(':subproject:runNpm').outcome == SUCCESS
 			result.output.contains('bar-environment')
 			result.output.contains('baz-environment')
-			result.task(':subproject:runNpm').outcome == SUCCESS
 	}
 }

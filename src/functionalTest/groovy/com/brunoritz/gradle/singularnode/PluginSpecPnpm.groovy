@@ -25,19 +25,19 @@ class PluginSpecPnpm
 		subProjectDir.mkdirs()
 
 		rootBuildFile << '''
-				plugins {
-				    id 'com.brunoritz.gradle.singular-node'
-				}
+			plugins {
+			    id 'com.brunoritz.gradle.singular-node'
+			}
 
-				nodeJs {
-					nodeVersion.set('20.6.0')
-					pnpmVersion.set('8.7.1')
-				}
-			'''
+			nodeJs {
+				nodeVersion.set('20.6.0')
+				pnpmVersion.set('8.7.1')
+			}
+		'''
 
 		settingsFile << '''
 				include ':subproject'
-			'''
+		'''
 	}
 
 	def cleanup()
@@ -49,6 +49,7 @@ class PluginSpecPnpm
 	{
 		given:
 			def packageFile = new File(subProjectDir, 'package.json')
+			def scriptFile = new File(subProjectDir, 'test.js')
 
 			subProjectBuildFile << '''
 				plugins {
@@ -56,11 +57,30 @@ class PluginSpecPnpm
 				}
 
 				task runPnpm(type: PnpmTask) {
-					args.set(['--help'])
+					args.set([
+						'run',
+						'test'
+					])
 				}
 			'''
 
-			packageFile << '{}'
+			scriptFile << '''
+				var colors = require('colors');
+
+				console.log(colors.green('script output'));
+			'''
+
+			packageFile << '''
+				{
+					"scripts": {
+						"test": "node test.js"
+					},
+
+					"dependencies": {
+						"colors": "1.4.0"
+					}
+				}
+			'''
 
 		when:
 			def result = GradleRunner.create()
@@ -70,8 +90,8 @@ class PluginSpecPnpm
 				.build()
 
 		then:
-			result.output.contains('Usage: pnpm [command] [flags]')
 			result.task(':subproject:runPnpm').outcome == SUCCESS
+			result.output.contains('script output')
 	}
 
 	def 'It shall be possible to pass environment variables to scripts via PNPM'()
@@ -116,8 +136,8 @@ class PluginSpecPnpm
 				.build()
 
 		then:
+			result.task(':subproject:runPnpm').outcome == SUCCESS
 			result.output.contains('bar-environment')
 			result.output.contains('baz-environment')
-			result.task(':subproject:runPnpm').outcome == SUCCESS
 	}
 }
