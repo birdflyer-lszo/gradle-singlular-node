@@ -58,7 +58,9 @@ documentation.
 ## Usage
 
 Any non-root project applying the plugin gets `installNpmPackages`, `installPnpmPackages` and `installYarnPackages`
-tasks configured.
+tasks configured. Note that the package installation tasks do not declare `node_modules` as an output directory in order
+to avoid lengthy content scanning being performed by Gradle.
+
 Any `NpmTask`, `PnpmTask` or `YarnTask` they define will automatically depend on the package installation tasks to
 ensure the installation of the dependencies defined in `package.json`.
 

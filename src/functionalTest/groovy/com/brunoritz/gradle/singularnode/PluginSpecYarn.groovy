@@ -25,19 +25,19 @@ class PluginSpecYarn
 		subProjectDir.mkdirs()
 
 		rootBuildFile << '''
-				plugins {
-				    id 'com.brunoritz.gradle.singular-node'
-				}
+			plugins {
+			    id 'com.brunoritz.gradle.singular-node'
+			}
 
-				nodeJs {
-					nodeVersion.set('20.6.0')
-					yarnVersion.set('berry')
-				}
-			'''
+			nodeJs {
+				nodeVersion.set('20.6.0')
+				yarnVersion.set('berry')
+			}
+		'''
 
 		settingsFile << '''
-				include ':subproject'
-			'''
+			include ':subproject'
+		'''
 	}
 
 	def cleanup()
@@ -49,6 +49,7 @@ class PluginSpecYarn
 	{
 		given:
 			def packageFile = new File(subProjectDir, 'package.json')
+			def scriptFile = new File(subProjectDir, 'test.js')
 
 			subProjectBuildFile << '''
 				plugins {
@@ -56,11 +57,30 @@ class PluginSpecYarn
 				}
 
 				task runYarn(type: YarnTask) {
-					args.set(['--help'])
+					args.set([
+						'run',
+						'test'
+					])
 				}
 			'''
 
-			packageFile << '{}'
+			scriptFile << '''
+				var colors = require('colors');
+
+				console.log(colors.green('script output'));
+			'''
+
+			packageFile << '''
+				{
+					"scripts": {
+						"test": "node test.js"
+					},
+
+					"dependencies": {
+						"colors": "1.4.0"
+					}
+				}
+			'''
 
 		when:
 			def result = GradleRunner.create()
@@ -70,8 +90,8 @@ class PluginSpecYarn
 				.build()
 
 		then:
-			result.output.contains('Yarn Package Manager - 2')
 			result.task(':subproject:runYarn').outcome == SUCCESS
+			result.output.contains('script output')
 	}
 
 	def 'It shall be possible to pass environment variables to scripts via Yarn'()
@@ -116,8 +136,8 @@ class PluginSpecYarn
 				.build()
 
 		then:
+			result.task(':subproject:runYarn').outcome == SUCCESS
 			result.output.contains('bar-environment')
 			result.output.contains('baz-environment')
-			result.task(':subproject:runYarn').outcome == SUCCESS
 	}
 }

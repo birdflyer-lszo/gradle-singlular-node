@@ -82,7 +82,6 @@ public final class PnpmSetup
 			if (newTask instanceof PnpmTask newPnpmTask) {
 				newPnpmTask.dependsOn(installPnpmPackagesTask);
 				newPnpmTask.getWorkingDirectory().set(project.getProjectDir());
-				newPnpmTask.getInstallBaseDir().set(configuration.installBaseDir);
 				newPnpmTask.getInstallationLayout().set(layout);
 			}
 		});
