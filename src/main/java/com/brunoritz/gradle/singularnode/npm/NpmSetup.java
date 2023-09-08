@@ -83,6 +83,9 @@ public final class NpmSetup
 				newNpmTask.dependsOn(installNpmPackagesTask);
 				newNpmTask.getWorkingDirectory().set(project.getProjectDir());
 				newNpmTask.getInstallationLayout().set(layout);
+
+				newNpmTask.getInputs().property("nodeJsVersion", configuration.nodeVersion);
+				newNpmTask.getInputs().property("npmVersion", configuration.npmVersion);
 			}
 		});
 

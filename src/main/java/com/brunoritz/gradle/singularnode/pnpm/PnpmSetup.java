@@ -83,6 +83,9 @@ public final class PnpmSetup
 				newPnpmTask.dependsOn(installPnpmPackagesTask);
 				newPnpmTask.getWorkingDirectory().set(project.getProjectDir());
 				newPnpmTask.getInstallationLayout().set(layout);
+
+				newPnpmTask.getInputs().property("nodeJsVersion", configuration.nodeVersion);
+				newPnpmTask.getInputs().property("pnpmVersion", configuration.pnpmVersion);
 			}
 		});
 
