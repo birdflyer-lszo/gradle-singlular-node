@@ -1,6 +1,7 @@
 package com.brunoritz.gradle.singularnode.pnpm
 
 import com.brunoritz.gradle.singularnode.NodeJsExtension
+import org.gradle.api.Project
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
@@ -24,7 +25,7 @@ class InstallPnpmPackagesTaskSpec
 			def subProject = multiModuleProject()
 			def configuration = subProject.rootProject.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = subProject.tasks.getByPath('installPnpmPackages')
+			def task = installTaskFromProject(subProject)
 
 			subProject.projectDir.mkdirs()
 			subProject.file('node_modules').mkdirs()
@@ -46,7 +47,7 @@ class InstallPnpmPackagesTaskSpec
 			def subProject = multiModuleProject()
 			def configuration = subProject.rootProject.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = subProject.tasks.getByPath('installPnpmPackages')
+			def task = installTaskFromProject(subProject)
 
 			subProject.projectDir.mkdirs()
 			subProject.file('node_modules').mkdirs()
@@ -71,7 +72,7 @@ class InstallPnpmPackagesTaskSpec
 	{
 		given:
 			def subProject = multiModuleProject()
-			def task = subProject.tasks.getByPath('installPnpmPackages')
+			def task = installTaskFromProject(subProject)
 
 			subProject.projectDir.mkdirs()
 			subProject.file('node_modules').mkdirs()
@@ -82,5 +83,10 @@ class InstallPnpmPackagesTaskSpec
 
 		then:
 			new File(subProject.file('node_modules'), '.install.executed').exists()
+	}
+
+	private static InstallPnpmPackagesTask installTaskFromProject(Project project)
+	{
+		return project.tasks.getByPath('installPnpmPackages') as InstallPnpmPackagesTask
 	}
 }

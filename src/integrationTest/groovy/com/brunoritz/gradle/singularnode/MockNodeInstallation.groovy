@@ -17,7 +17,7 @@ final class MockNodeInstallation
 		project.copy {
 			from source
 			into dest
-			fileMode 0755
+			fileMode = 0755
 		}
 
 		return dest

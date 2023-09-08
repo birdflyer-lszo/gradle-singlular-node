@@ -1,6 +1,7 @@
 package com.brunoritz.gradle.singularnode.pnpm
 
 import com.brunoritz.gradle.singularnode.NodeJsExtension
+import org.gradle.api.Project
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
@@ -20,7 +21,7 @@ class InstallPnpmTaskSpec
 			def installBase = simulateNodeInstallationInProject(project)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
 			def simulatedLeftover = new File(layout.pnpmInstallDirectory(), 'should-not-exist')
-			def task = project.tasks.getByPath('installPnpm')
+			def task = installTaskFromProject(project)
 
 			configuration.pnpmVersion.set('1.2.3')
 			layout.pnpmInstallDirectory().mkdirs()
@@ -41,7 +42,7 @@ class InstallPnpmTaskSpec
 			def project = rootProject()
 			def configuration = project.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = project.tasks.getByPath('installPnpm')
+			def task = installTaskFromProject(project)
 
 			simulateNodeInstallationInProject(project)
 			configuration.pnpmVersion.set('1.2.3')
@@ -64,5 +65,10 @@ class InstallPnpmTaskSpec
 				'--no-save ' +
 				"--prefix ${pnpmDir} " +
 				'pnpm@1.2.3'
+	}
+
+	private static InstallPnpmTask installTaskFromProject(Project project)
+	{
+		return project.tasks.getByPath('installPnpm') as InstallPnpmTask
 	}
 }

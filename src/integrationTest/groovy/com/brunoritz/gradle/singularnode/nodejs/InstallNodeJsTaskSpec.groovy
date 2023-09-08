@@ -1,6 +1,7 @@
 package com.brunoritz.gradle.singularnode.nodejs
 
 import com.brunoritz.gradle.singularnode.NodeJsExtension
+import org.gradle.api.Project
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
@@ -19,7 +20,7 @@ class InstallNodeJsTaskSpec
 			def configuration = project.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
 			def simulatedLeftover = new File(layout.nodeJsInstallDir(), 'should-not-exist')
-			def task = project.tasks.getByPath('installNodeJs')
+			def task = installTaskFromProject(project)
 
 			task.nodeArchive.set(archriveResourceAsFile('nodejs-windows.zip'))
 			layout.nodeJsInstallDir().mkdirs()
@@ -39,7 +40,7 @@ class InstallNodeJsTaskSpec
 			def project = rootProject()
 			def configuration = project.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = project.tasks.getByPath('installNodeJs')
+			def task = installTaskFromProject(project)
 
 			task.nodeArchive.set(archriveResourceAsFile('nodejs-unix.tar.gz'))
 			layout.nodeJsInstallDir().mkdirs()
@@ -63,7 +64,7 @@ class InstallNodeJsTaskSpec
 			def project = rootProject()
 			def configuration = project.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = project.tasks.getByPath('installNodeJs')
+			def task = installTaskFromProject(project)
 
 			task.nodeArchive.set(archriveResourceAsFile('nodejs-windows.zip'))
 			layout.nodeJsInstallDir().mkdirs()
@@ -75,6 +76,11 @@ class InstallNodeJsTaskSpec
 			def sanitizedNpmCmd = configuration.installBaseDir.dir('node/npm.cmd').get().asFile
 
 			sanitizedNpmCmd.exists() && sanitizedNpmCmd.isFile()
+	}
+
+	private static InstallNodeJsTask installTaskFromProject(Project project)
+	{
+		return project.tasks.getByPath('installNodeJs') as InstallNodeJsTask
 	}
 
 	private File archriveResourceAsFile(String identifier)
