@@ -4,6 +4,7 @@ import com.brunoritz.gradle.singularnode.NodeJsExtension
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
+import static com.brunoritz.gradle.singularnode.Configuration.configureNodeJs
 import static com.brunoritz.gradle.singularnode.MockNodeInstallation.simulateNodeInstallationInProject
 import static com.brunoritz.gradle.singularnode.ProjectFactory.multiModuleProject
 import static com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory.platformDependentLayout
@@ -22,6 +23,24 @@ class PnpmTaskSpec
 
 		then:
 			task.taskDependencies.getDependencies(task).contains(installTask)
+	}
+
+	def 'It shall make the NodeJS and PNPM versions property inputs for reliable caching and to-to-date checks'()
+	{
+		given:
+			def subproject = multiModuleProject()
+
+			configureNodeJs(subproject.rootProject) {
+				nodeVersion.set('1.2.3')
+				pnpmVersion.set('5.6.7')
+			}
+
+		when:
+			def task = subproject.tasks.create('pnpmTask', PnpmTask)
+
+		then:
+			task.inputs.properties['nodeJsVersion'] == '1.2.3'
+			task.inputs.properties['pnpmVersion'] == '5.6.7'
 	}
 
 	@IgnoreIf({ System.getProperty('os.name').containsIgnoreCase('windows') })

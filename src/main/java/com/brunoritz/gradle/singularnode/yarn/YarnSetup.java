@@ -83,6 +83,9 @@ public final class YarnSetup
 				newYarnTask.dependsOn(installYarnPackagesTask);
 				newYarnTask.getWorkingDirectory().set(project.getProjectDir());
 				newYarnTask.getInstallationLayout().set(layout);
+
+				newYarnTask.getInputs().property("nodeJsVersion", configuration.nodeVersion);
+				newYarnTask.getInputs().property("yarnVersion", configuration.yarnVersion);
 			}
 		});
 

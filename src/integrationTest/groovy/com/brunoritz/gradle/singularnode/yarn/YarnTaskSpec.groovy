@@ -4,6 +4,7 @@ import com.brunoritz.gradle.singularnode.NodeJsExtension
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
+import static com.brunoritz.gradle.singularnode.Configuration.configureNodeJs
 import static com.brunoritz.gradle.singularnode.MockNodeInstallation.simulateNodeInstallationInProject
 import static com.brunoritz.gradle.singularnode.ProjectFactory.multiModuleProject
 import static com.brunoritz.gradle.singularnode.platform.layout.InstallationLayoutFactory.platformDependentLayout
@@ -22,6 +23,24 @@ class YarnTaskSpec
 
 		then:
 			task.taskDependencies.getDependencies(task).contains(installTask)
+	}
+
+	def 'It shall make the NodeJS and Yarn versions property inputs for reliable caching and to-to-date checks'()
+	{
+		given:
+			def subproject = multiModuleProject()
+
+			configureNodeJs(subproject.rootProject) {
+				nodeVersion.set('1.2.3')
+				yarnVersion.set('berry')
+			}
+
+		when:
+			def task = subproject.tasks.create('yarnTask', YarnTask)
+
+		then:
+			task.inputs.properties['nodeJsVersion'] == '1.2.3'
+			task.inputs.properties['yarnVersion'] == 'berry'
 	}
 
 	@IgnoreIf({ System.getProperty('os.name').containsIgnoreCase('windows') })
