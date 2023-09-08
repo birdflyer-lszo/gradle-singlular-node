@@ -86,12 +86,12 @@ body:
             label: Platform
             description: On which platforms does the problem occur?
             options:
-                - Windows
-                - macOS (Apple Silicon)
-                - macOS (Intel)
-                - Linux
-            validations:
-                required: true
+                - label: Windows
+                - label: macOS (Apple Silicon)
+                - label: macOS (Intel)
+                - label: Linux
+        validations:
+            required: true
 
     -   type: textarea
         id: logs
