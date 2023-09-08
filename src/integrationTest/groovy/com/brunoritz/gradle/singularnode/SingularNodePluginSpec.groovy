@@ -134,7 +134,7 @@ class SingularNodePluginSpec
              * validate the proper working of the repository a functional test of the plugin is needed.
              */
 			IvyArtifactRepository.isInstance(repository)
-			repository.url.toString() == 'https://nodejs.org/dist'
+			(repository as IvyArtifactRepository).url.toString() == 'https://nodejs.org/dist'
 	}
 
 	def 'It shall be possible to specify an alternative download base URL'()
@@ -154,7 +154,7 @@ class SingularNodePluginSpec
              * validate the proper working of the repository a functional test of the plugin is needed.
              */
 			IvyArtifactRepository.isInstance(repository)
-			repository.url.toString() == 'https://user-defined-mirror.local'
+			(repository as IvyArtifactRepository).url.toString() == 'https://user-defined-mirror.local'
 	}
 
 	def 'It shall produce an error, if the plugin is applied to a subproject, but missing on the root project'()

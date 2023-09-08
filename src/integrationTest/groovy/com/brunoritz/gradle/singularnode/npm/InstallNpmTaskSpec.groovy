@@ -1,6 +1,7 @@
 package com.brunoritz.gradle.singularnode.npm
 
 import com.brunoritz.gradle.singularnode.NodeJsExtension
+import org.gradle.api.Project
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
@@ -20,7 +21,7 @@ class InstallNpmTaskSpec
 			def installBase = simulateNodeInstallationInProject(project)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
 			def simulatedLeftover = new File(layout.npmInstallDirectory(), 'should-not-exist')
-			def task = project.tasks.getByPath('installNpm')
+			def task = installTaskFromProject(project)
 
 			configuration.npmVersion.set('1.2.3')
 			layout.npmInstallDirectory().mkdirs()
@@ -41,7 +42,7 @@ class InstallNpmTaskSpec
 			def project = rootProject()
 			def configuration = project.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = project.tasks.getByPath('installNpm')
+			def task = installTaskFromProject(project)
 
 			simulateNodeInstallationInProject(project)
 			configuration.npmVersion.set('1.2.3')
@@ -64,5 +65,10 @@ class InstallNpmTaskSpec
 				'--no-save ' +
 				"--prefix ${npmDir} " +
 				'npm@1.2.3'
+	}
+
+	private static InstallNpmTask installTaskFromProject(Project project)
+	{
+		return project.tasks.getByPath('installNpm') as InstallNpmTask
 	}
 }

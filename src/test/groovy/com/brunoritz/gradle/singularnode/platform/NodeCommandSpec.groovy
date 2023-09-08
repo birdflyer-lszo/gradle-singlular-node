@@ -28,7 +28,7 @@ class NodeCommandSpec
 			command.execute()
 
 		then:
-			1 * processes.exec { _ as Action } >> { arguments -> arguments[0].execute(execSpec) }
+			1 * processes.exec { _ as Action } >> { Action action -> action.execute(execSpec) }
 			1 * layout.pathOfNodeExecutable() >> NODE_EXECUTABLE
 			1 * layout.nodeJsBinDirectory() >> NODE_BIN_DIR
 			1 * execSpec.setExecutable(nodeExecutable.absolutePath)
@@ -50,11 +50,11 @@ class NodeCommandSpec
 				.execute()
 
 		then:
-			1 * processes.exec { _ as Action } >> { arguments -> arguments[0].execute(execSpec) }
+			1 * processes.exec { _ as Action } >> { Action action -> action.execute(execSpec) }
 			1 * layout.pathOfNodeExecutable() >> NODE_EXECUTABLE
 			1 * layout.nodeJsBinDirectory() >> NODE_BIN_DIR
-			1 * execSpec.environment(_) >> { arguments ->
-				assert arguments[0]['OVERRIDE'] == 'new-value'
+			1 * execSpec.environment(_) >> { Map<String, String> envVars ->
+				assert envVars['OVERRIDE'] == 'new-value'
 
 				return execSpec
 			}
@@ -80,7 +80,7 @@ class NodeCommandSpec
 				.execute()
 
 		then:
-			1 * processes.exec { _ as Action } >> { arguments -> arguments[0].execute(execSpec) }
+			1 * processes.exec { _ as Action } >> { Action action -> action.execute(execSpec) }
 
 		then:
 			1 * layout.pathOfNodeExecutable() >> NODE_EXECUTABLE
@@ -112,15 +112,15 @@ class NodeCommandSpec
 				.execute()
 
 		then:
-			1 * processes.exec { _ as Action } >> { arguments -> arguments[0].execute(execSpec) }
+			1 * processes.exec { _ as Action } >> { Action action -> action.execute(execSpec) }
 
 		then:
 			1 * layout.pathOfNodeExecutable() >> NODE_EXECUTABLE
 			1 * layout.nodeJsBinDirectory() >> NODE_BIN_DIR
-			1 * execSpec.environment(_) >> { arguments ->
-				assert arguments[0]['FOO'] == 'BAR'
-				assert arguments[0]['BAR'] == 'BAZ'
-				assert arguments[0]['SOMETHING'] == 'NOTHING'
+			1 * execSpec.environment(_) >> { Map<String, String> envVars ->
+				assert envVars['FOO'] == 'BAR'
+				assert envVars['BAR'] == 'BAZ'
+				assert envVars['SOMETHING'] == 'NOTHING'
 
 				return execSpec
 			}
@@ -139,13 +139,13 @@ class NodeCommandSpec
 			command.execute()
 
 		then:
-			1 * processes.exec { _ as Action } >> { arguments -> arguments[0].execute(execSpec) }
+			1 * processes.exec { _ as Action } >> { Action action -> action.execute(execSpec) }
 
 		then:
 			1 * layout.pathOfNodeExecutable() >> NODE_EXECUTABLE
 			1 * layout.nodeJsBinDirectory() >> NODE_BIN_DIR
-			1 * execSpec.environment(_) >> { arguments ->
-				assert arguments[0]['PATH'].startsWith("${NODE_BIN_DIR.absolutePath}${File.pathSeparator}")
+			1 * execSpec.environment(_) >> { Map<String, String> envVars ->
+				assert envVars['PATH'].startsWith("${NODE_BIN_DIR.absolutePath}${File.pathSeparator}")
 
 				return execSpec
 			}
