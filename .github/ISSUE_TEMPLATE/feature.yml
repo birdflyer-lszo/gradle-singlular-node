@@ -39,9 +39,9 @@ body:
             label: Platform
             description: Which platforms should be taken into consideration?
             options:
-                - Windows
-                - macOS (Apple Silicon)
-                - macOS (Intel)
-                - Linux
-            validations:
-                required: true
+                - label: Windows
+                - label: macOS (Apple Silicon)
+                - label: macOS (Intel)
+                - label: Linux
+        validations:
+            required: true
