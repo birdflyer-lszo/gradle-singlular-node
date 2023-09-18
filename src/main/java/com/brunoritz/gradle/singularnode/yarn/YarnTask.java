@@ -70,9 +70,6 @@ public abstract class YarnTask
 	public abstract MapProperty<CharSequence, CharSequence> getEnvironment();
 
 	@Internal
-	public abstract DirectoryProperty getInstallBaseDir();
-
-	@Internal
 	public abstract DirectoryProperty getWorkingDirectory();
 
 	@Internal

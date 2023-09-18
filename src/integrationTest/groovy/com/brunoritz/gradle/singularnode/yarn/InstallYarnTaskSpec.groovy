@@ -1,6 +1,7 @@
 package com.brunoritz.gradle.singularnode.yarn
 
 import com.brunoritz.gradle.singularnode.NodeJsExtension
+import org.gradle.api.Project
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
@@ -20,7 +21,7 @@ class InstallYarnTaskSpec
 			def installBase = simulateNodeInstallationInProject(project)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
 			def simulatedLeftover = new File(layout.yarnInstallDirectory(), 'should-not-exist')
-			def task = project.tasks.getByPath('installYarn')
+			def task = installTaskFromProject(project)
 
 			configuration.yarnVersion.set('1.2.3')
 			layout.yarnInstallDirectory().mkdirs()
@@ -41,7 +42,7 @@ class InstallYarnTaskSpec
 			def project = rootProject()
 			def configuration = project.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = project.tasks.getByPath('installYarn')
+			def task = installTaskFromProject(project)
 
 			simulateNodeInstallationInProject(project)
 			configuration.yarnVersion.set('1.2.3')
@@ -64,5 +65,10 @@ class InstallYarnTaskSpec
 				'--no-save ' +
 				"--prefix ${yarnDir} " +
 				'yarn@1.2.3'
+	}
+
+	private static InstallYarnTask installTaskFromProject(Project project)
+	{
+		return project.tasks.getByPath('installYarn') as InstallYarnTask
 	}
 }

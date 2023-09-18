@@ -2,7 +2,7 @@
 
 [![build](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml/badge.svg?branch=master&event=push)](https://github.com/birdflyer-lszo/gradle-singlular-node/actions/workflows/build.yaml)
 [![License](https://img.shields.io/github/license/node-gradle/gradle-node-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-![Version](https://img.shields.io/badge/Version-1.2.0-orange.svg)
+![Version](https://img.shields.io/badge/Version-1.3.0-orange.svg)
 
 ## About
 
@@ -58,7 +58,9 @@ documentation.
 ## Usage
 
 Any non-root project applying the plugin gets `installNpmPackages`, `installPnpmPackages` and `installYarnPackages`
-tasks configured.
+tasks configured. Note that the package installation tasks do not declare `node_modules` as an output directory in order
+to avoid lengthy content scanning being performed by Gradle.
+
 Any `NpmTask`, `PnpmTask` or `YarnTask` they define will automatically depend on the package installation tasks to
 ensure the installation of the dependencies defined in `package.json`.
 

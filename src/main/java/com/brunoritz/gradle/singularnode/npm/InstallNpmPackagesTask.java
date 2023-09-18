@@ -32,18 +32,18 @@ public abstract class InstallNpmPackagesTask
 	extends DefaultTask
 {
 	private final ExecOperations processes;
-	private final File executionMarker;
 	private final File packageFile;
 	private final File lockFile;
+	private final File executionMarker;
 
 	@Inject
 	public InstallNpmPackagesTask(ExecOperations processes, Project project)
 	{
 		this.processes = processes;
 
-		executionMarker = new File(project.file("node_modules"), ".install.executed");
 		packageFile = project.file("package.json");
 		lockFile = project.file("package-lock.json");
+		executionMarker = new File(project.file("node_modules"), ".install.executed");
 	}
 
 	/**

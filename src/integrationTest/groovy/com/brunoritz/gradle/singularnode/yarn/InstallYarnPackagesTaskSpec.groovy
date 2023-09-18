@@ -1,6 +1,7 @@
 package com.brunoritz.gradle.singularnode.yarn
 
 import com.brunoritz.gradle.singularnode.NodeJsExtension
+import org.gradle.api.Project
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
@@ -24,7 +25,7 @@ class InstallYarnPackagesTaskSpec
 			def subProject = multiModuleProject()
 			def configuration = subProject.rootProject.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = subProject.tasks.getByPath('installYarnPackages')
+			def task = installTaskFromProject(subProject)
 
 			subProject.projectDir.mkdirs()
 			subProject.file('node_modules').mkdirs()
@@ -46,7 +47,7 @@ class InstallYarnPackagesTaskSpec
 			def subProject = multiModuleProject()
 			def configuration = subProject.rootProject.extensions.getByType(NodeJsExtension)
 			def layout = platformDependentLayout(configuration.installBaseDir).get()
-			def task = subProject.tasks.getByPath('installYarnPackages')
+			def task = installTaskFromProject(subProject)
 
 			subProject.projectDir.mkdirs()
 			subProject.file('node_modules').mkdirs()
@@ -71,7 +72,7 @@ class InstallYarnPackagesTaskSpec
 	{
 		given:
 			def subProject = multiModuleProject()
-			def task = subProject.tasks.getByPath('installYarnPackages')
+			def task = installTaskFromProject(subProject)
 
 			subProject.projectDir.mkdirs()
 			subProject.file('node_modules').mkdirs()
@@ -81,6 +82,11 @@ class InstallYarnPackagesTaskSpec
 			task.installPackages()
 
 		then:
-			new File(subProject.file('node_modules'), '.install.executed').exists()
+			new File(subProject.projectDir, '.install.executed').exists()
+	}
+
+	private static InstallYarnPackagesTask installTaskFromProject(Project project)
+	{
+		return project.tasks.getByPath('installYarnPackages') as InstallYarnPackagesTask
 	}
 }
