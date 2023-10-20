@@ -57,8 +57,8 @@ testing {
 }
 
 gradlePlugin {
-	website.set("https://github.com/birdflyer-lszo/gradle-singlular-node")
-	vcsUrl.set("https://github.com/birdflyer-lszo/gradle-singlular-node")
+	website = "https://github.com/birdflyer-lszo/gradle-singlular-node"
+	vcsUrl = "https://github.com/birdflyer-lszo/gradle-singlular-node"
 
 	plugins {
 		create("singularNode") {
@@ -67,13 +67,13 @@ gradlePlugin {
 
 			displayName = "Singular NodeJS Installation Plugin"
 			description = "Allows projects to use a single NodeJS distribution in a multi-module project"
-			tags.set(listOf(
+			tags = listOf(
 				"node",
 				"npm",
 				"yarn",
 				"pnpm",
 				"multimodule"
-			))
+			)
 		}
 	}
 
@@ -95,8 +95,8 @@ dependencies {
 }
 
 spotbugs {
-	excludeFilter.set(file("config/spotbugs-exclusions.xml"))
-	showStackTraces.set(false)
+	excludeFilter = file("config/spotbugs-exclusions.xml")
+	showStackTraces = false
 
 	effort = Effort.MAX
 }
