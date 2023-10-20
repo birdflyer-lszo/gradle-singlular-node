@@ -2,7 +2,7 @@ package com.brunoritz.gradle.singularnode.platform.layout;
 
 import org.gradle.api.file.DirectoryProperty;
 
-import static com.brunoritz.gradle.singularnode.platform.layout.PathFactory.combine;
+import static com.brunoritz.gradle.singularnode.platform.layout.PathCombination.combine;
 
 import java.io.File;
 
