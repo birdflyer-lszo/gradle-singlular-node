@@ -3,11 +3,11 @@ package com.brunoritz.gradle.singularnode.platform.layout;
 import java.io.File;
 
 /**
- * A convenient utility to assemble {@code File}s representing a path consisting of multiple parts.
+ * A convenience utility to assemble {@code File}s representing a path consisting of multiple parts.
  */
-final class PathFactory
+final class PathCombination
 {
-	private PathFactory()
+	private PathCombination()
 	{
 		throw new UnsupportedOperationException();
 	}
