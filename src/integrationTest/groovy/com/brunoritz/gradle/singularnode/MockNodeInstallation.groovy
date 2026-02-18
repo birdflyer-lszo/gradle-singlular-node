@@ -17,7 +17,19 @@ final class MockNodeInstallation
 		project.copy {
 			from source
 			into dest
-			fileMode = 0755
+
+			dirPermissions {
+				user {
+					write = true
+					execute = true
+				}
+			}
+			filePermissions {
+				user {
+					read = true
+					execute = true
+				}
+			}
 		}
 
 		return dest
