@@ -139,7 +139,7 @@ gitVersioning.apply {
 }
 
 tasks.wrapper {
-	gradleVersion = "9.3.0"
+	gradleVersion = "9.3.1"
 	distributionType = Wrapper.DistributionType.ALL
 }
 
